@@ -13,9 +13,12 @@ using namespace std;
 
 // report the error
 // include the information of line
-void error(const char *s, int linecount) {
-    fprintf(stderr, "%d\n", linecount);
-    fprintf(stderr, "%s ", s);
+void error(const char *s1, const char *s2, const char *s3, int linecount) {
+    fprintf(stderr, "\033[1mLine: %d\033[0m ", linecount);
+    fprintf(stderr, "\033[1;30merror:\033[0m ");
+    if (s1 != NULL) fprintf(stderr, "%s ", s1);
+    if (s2 != NULL) fprintf(stderr, "%s ", s2);
+    if (s3 != NULL) fprintf(stderr, "%s ", s3);
     fprintf(stderr, "\n");
     exit(-1);
 }
@@ -29,11 +32,13 @@ struct ptr_cmp {
 };
 
 struct SymbolTable {
-    map <const char*, const char*, ptr_cmp> simbol_table; // store identifier
-    
-    
+    map <const char*, const char*, ptr_cmp> id_table; // store identifier
+    map <const char*, vector<char*>, ptr_cmp> struct_table;
     
 };
+
+map <const char*, vector<int>, ptr_cmp> function_table;
+
 
 void programCheck(Node *node);
 void extdefsCheck(Node *node);
@@ -56,6 +61,9 @@ void expCheck(Node *node);
 void arrsCheck(Node *node);
 void argsCheck(Node *node);
 void sdecsCheck(Node *node);
+void idCheck(Node *node);
+
+bool isDefined(const char *s);
 
 // semantic check function
 // input is the node from parse tree
@@ -165,13 +173,23 @@ void extvarsCheck(Node *node) {
 // VAR : ID
 //     | VAR LB INT RB
 void varCheck(Node *node) {
-    if (node->size == 1) { // first rule
-        
+    if (node->size == 1) {
+        if (isDefined(node->children[0]->name)) {
+            error("redeclearation of", node->children[0]->name, "with no linkage", node->linecount);
+        }
+        else {
+            // TODO
+        }
     }
-    else { // second rule
-        int intValue = atoi(node->children[0]->name);
+    else {
+        // int int_value = atoi(node->children[2]->name);
+        varCheck(node->children[0]);
     }
 }
 
+bool isDefined(const char *s) {
+    // TODO
+    return false;
+}
 
 #endif

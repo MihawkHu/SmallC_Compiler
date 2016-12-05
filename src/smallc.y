@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     }
     
     /*Print parse tree to check whether parsing is correct*/
-    /*printParseTree(root);*/
+    printParseTree(root);
     
     /*semantiAnalysis(root);*/
 
