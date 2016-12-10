@@ -5,7 +5,7 @@
     #include <cstdio>
     #include <cstdlib>
     #include "lex.yy.c"
-    /*#include "semanticAnalysis.h"*/
+    #include "semanticAnalysis.h"
     
     Node *root;
     void yyerror(const char *msg);
@@ -83,7 +83,6 @@ STMT        : EXP SEMI {$$ = newNode(linecount, "STMT", 2, $1, newNode(linecount
             | RETURN EXP SEMI {$$ = newNode(linecount, "STMT", 3, newNode(linecount, $1, 0), $2, newNode(linecount, $3, 0));}
             | IF LP EXP RP STMT %prec LTIF {$$ = newNode(linecount, "STMT", 5, newNode(linecount, $1, 0), newNode(linecount, $2, 0), $3, newNode(linecount, $4, 0), $5);}
             | IF LP EXP RP STMT ELSE STMT {$$ = newNode(linecount, "STMT", 7, newNode(linecount, $1, 0), newNode(linecount, $2, 0), $3, newNode(linecount, $4, 0), $5, newNode(linecount, $6, 0), $7);}
-            | FOR LP EXP SEMI ELSE STMT {$$ = newNode(linecount, "STMT", 6, newNode(linecount, $1, 0), newNode(linecount, $2, 0), $3, newNode(linecount, $4, 0), newNode(linecount, $5, 0), $6);}
             | FOR LP EXP SEMI EXP SEMI EXP RP STMT {$$ = newNode(linecount, "STMT", 9, newNode(linecount, $1, 0), newNode(linecount, $2, 0), $3, newNode(linecount, $4, 0), newNode(linecount, $4, 0), $5, newNode(linecount, $6, 0), $7, newNode(linecount, $8, 0), $9);}
             | CONT SEMI {$$ = newNode(linecount, "STMT", 2, newNode(linecount, $1, 0), newNode(linecount, $2, 0));}
             | BREAK SEMI {$$ = newNode(linecount, "STMT", 2, newNode(linecount, $1, 0), newNode(linecount, $2, 0));}
@@ -188,7 +187,7 @@ int main(int argc, char *argv[])
     /*Print parse tree to check whether parsing is correct*/
     printParseTree(root);
     
-    /*semantiAnalysis(root);*/
+    semanticAnalysis(root);
 
     /*intermediateCodeGen(root);*/
     

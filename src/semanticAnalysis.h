@@ -32,9 +32,10 @@ struct ptr_cmp {
 };
 
 struct SymbolTable {
+    SymbolTable *parent; // record the parent scope SymbolTable
     map <const char*, const char*, ptr_cmp> id_table; // store identifier
-    map <const char*, vector<char*>, ptr_cmp> struct_table;
-    
+    map <const char*, vector<char*>, ptr_cmp> struct_table; // store struct member
+        
 };
 
 map <const char*, vector<int>, ptr_cmp> function_table;
@@ -50,7 +51,7 @@ void varCheck(Node *node);
 void funcCheck(Node *node);
 void parasCheck(Node *node);
 void sdefsCheck(Node *node);
-void stmtblock(Node *node);
+void stmtblockCheck(Node *node);
 void stmtsCheck(Node *node);
 void stmtCheck(Node *node);
 void defsCheck(Node *node);
@@ -100,6 +101,9 @@ void semantic(Node *node) {
     }
     else if (strcmp(node->name, "STMTS") == 0) {
         stmtsCheck(node);
+    }
+    else if (strcmp(node->name, "STMTBLOCK") == 0) {
+        stmtblockCheck(node);
     }
     else if (strcmp(node->name, "STMT") == 0) {
         stmtCheck(node);
@@ -170,6 +174,75 @@ void extvarsCheck(Node *node) {
 
 }
 
+// STSPEC : STRUCT ID LC SDEFS RC
+//        | STRUCT LC SDEFS RC
+//        | STRUCT ID
+void stspecCheck(Node *node) {
+    
+}
+
+// FUNC : ID LP PARAS RP
+void funcCheck(Node *node) {
+    
+}
+
+// PARAS : TYPE ID COMMA PARAS
+//       | TYPE ID
+//       | e
+void parasCheck(Node *node) {
+    
+}
+
+// STMTBLOCK : LC DEFS STMTS RC
+void stmtblockCheck(Node *p) {
+    
+}
+
+// STMTS : STMT STMTS
+//       | e
+void stmtsCheck(Node *p) {
+    
+}
+
+// STMT : EXP SEMI
+//      | STMTBLOCK
+//      | RETURN EXP SEMI
+//      | IF LP EXP RP STMT %prec LTIF
+//      | IF LP EXP RP STMT ELSE STMT
+//      | FOR LP EXP SEMI EXP SEMI EXP RP STMT
+//      | CONT SEMI
+//      | BREAK SEMI
+void stmtCheck(Node *node) {
+    
+}
+
+// DEFS : TYPE DECS SEMI DEFS
+//      | STSPEC SDECS SEMI DEFS
+//      | e
+void defsCheck(Node *node) {
+    
+}
+
+// SDEFS : TYPE SDECS SEMI SDEFS
+//       | e
+void sdefsCheck(Node *node) {
+    
+}
+
+// SDECS : ID COMMA SDECS
+//       | ID
+void sdecsCheck(Node *node) {
+    
+}
+
+// DECS : VAR
+//      | VAR COMMA DECS
+//      | VAR ASSIGN INIT COMMA DECS
+//      | VAR ASSIGN INIT
+void decsCheck(Node *node) {
+    
+}
+
 // VAR : ID
 //     | VAR LB INT RB
 void varCheck(Node *node) {
@@ -186,6 +259,43 @@ void varCheck(Node *node) {
         varCheck(node->children[0]);
     }
 }
+
+// INIT : EXP
+//      | LC ARGS RC
+void initCheck(Node *node) {
+    
+}
+
+// EXP : EXPS
+//     | e
+void expCheck(Node *node) {
+    
+}
+
+// EXPS : EXPS BINARYOP EXPS
+//      | UNARYOP EXPS
+//      | LP EXPS RP
+//      | ID LP ARGS RP
+//      | ID ARRS
+//      | ID DOT ID
+//      | INT
+void expsCheck(Node *node) {
+    
+}
+
+// ARRS : LB EXP RB ARRS
+//      | e
+void arrsCheck(Node *node) {
+    
+}
+
+// ARGS : EXP COMMA ARGS
+//      | EXP
+void argsCheck(Node *node) {
+    
+}
+
+
 
 bool isDefined(const char *s) {
     // TODO
