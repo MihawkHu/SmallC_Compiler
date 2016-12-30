@@ -6,6 +6,7 @@
     #include <cstdlib>
     #include "lex.yy.c"
     #include "semanticAnalysis.h"
+    #include "intermediateCodeGen.h"
     
     Node *root;
     void yyerror(const char *msg);
@@ -185,7 +186,7 @@ int main(int argc, char *argv[])
     }
     
     /*Print parse tree to check whether parsing is correct*/
-    printParseTree(root);
+    /*printParseTree(root);*/
     
     semanticAnalysis(root);
 

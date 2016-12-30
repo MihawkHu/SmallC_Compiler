@@ -1,5 +1,5 @@
 /*
-
+    
 */
 
 #ifndef SEMANTIC_ANALYSIS_H
@@ -23,7 +23,6 @@ void error(const char *s1, const char *s2, const char *s3, int linecount) {
     exit(-1);
 }
 
-
 // used in struct SymbolTable to compare two string
 struct ptr_cmp {
     bool operator()(const char *s1, const char *s2) const {
@@ -35,10 +34,16 @@ struct SymbolTable {
     SymbolTable *parent; // record the parent scope SymbolTable
     map <const char*, const char*, ptr_cmp> id_table; // store identifier
     map <const char*, vector<char*>, ptr_cmp> struct_table; // store struct member
-        
+    
+    SymbolTable(SymbolTable *pa) {
+        parent = pa;
+    }
+    ~SymbolTable() {}
 };
 
 map <const char*, vector<int>, ptr_cmp> function_table;
+
+SymbolTable *rootTable = new SymbolTable(NULL);
 
 
 void programCheck(Node *node);
@@ -167,11 +172,19 @@ void extdefCheck(Node *node) {
     
 }
 
-// EXTVARS : ID
-//         | ID COMMA SEXTVARS 
-//         | e
-void extvarsCheck(Node *node) {
+// SEXTVARS : ID
+//          | ID COMMA SEXTVARS
+//          | e
+void sextvarsCheck(Node *node) {
+    
+}
 
+// EXTVARS : VAR
+//         | VAR ASSIGN INIT
+//         | VAR COMMA EXTVARS
+//         | VAR ASSIGN INIT COMMA EXTVARS
+void extvarsCheck(Node *node) {
+    
 }
 
 // STSPEC : STRUCT ID LC SDEFS RC
