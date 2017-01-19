@@ -33,40 +33,40 @@ static char Global_Struct_No_Name = '0';
 static char labelIndex = 'a';
 
 // new symbol table in scope
-SymbolTable* pushScope(SymbolTable* table){ 
+SymbolTable* pushScope(SymbolTable* table) { 
     SymbolTable* tmp = new SymbolTable();
     tmp->parent = table;
     return tmp;
 }
 
-SymbolTable* popScope(SymbolTable* table){
+SymbolTable* popScope(SymbolTable* table) {
     SymbolTable* tmp = table->parent;
     delete table;
     return tmp;
 }
 
-void reclaimRegisters(){ // Reclaim all Registers
+void reclaimRegisters() { // Reclaim all Registers
     remainingRegisters = { R_T0, R_T1, R_T2, R_T3, R_T4, R_T5, R_T6, R_T7, R_T8, R_T9};
     registersInUse = {};
 }
 
-void reclaimTemporarys(){
+void reclaimTemporarys() {
     remainingTemporarys = { T_0, T_1, T_2, T_3, T_4, T_5, T_6, T_7, T_8, T_9, T_10, T_11, T_12, T_13, T_14, T_15, T_16, T_17, T_18, T_19, T_20, T_21, T_22, T_23, T_24, T_25, T_26, T_27, T_28, T_29, T_30};
     temposInUse = {};
 }
 
-void returnRegister(Register r){  // Return a being used register
+void returnRegister(Register r) {  // Return a being used register
     remainingRegisters.insert(r);
     registersInUse.erase(r);
 }
 
-void returnTemporary(Temporary t){
+void returnTemporary(Temporary t) {
     remainingTemporarys.insert(t);
     temposInUse.erase(t);
 }
 
-Register getFreeRegister(){  // Get an unused register
-    if(remainingRegisters.empty()){
+Register getFreeRegister() {  // Get an unused register
+    if (remainingRegisters.empty()) {
         cout << "No free registers left. I haven't implemented this yet!" << endl;
         return R_ZERO;
     } else {
@@ -77,9 +77,8 @@ Register getFreeRegister(){  // Get an unused register
     }
 }
 
-Temporary getFreeTemporary(){
-    if(remainingTemporarys.empty()){
-        cout << "No free tempos left. I haven't implemented this yet!" << endl;
+Temporary getFreeTemporary() {
+    if (remainingTemporarys.empty()) {
         return T_0;
     } else {
         Temporary ret = *(remainingTemporarys.begin());
@@ -89,7 +88,7 @@ Temporary getFreeTemporary(){
     }
 }
 
-bool generate_intermediates(SymbolTable* symbol_table, vector<Inter*>* inters, Node* root, vector<Instruction*>* instrs){
+bool generate_intermediates(SymbolTable* symbol_table, vector<Inter*>* inters, Node* root, vector<Instruction*>* instrs) {
     symbol_table = new SymbolTable();
     global_table = symbol_table;
     global_table->parent = NULL;
@@ -101,25 +100,25 @@ bool generate_intermediates(SymbolTable* symbol_table, vector<Inter*>* inters, N
 }
 
 // Check Node
-bool check(Node* cur, SymbolTable* table){
+bool check(Node* cur, SymbolTable* table) {
     bool flag = true;
-    switch(cur->tem_NodeType){
+    switch(cur->tem_NodeType) {
         case Program:
             currentLoopBreakLabel = "";
             currentLoopContinueLabel = "";
             reclaimRegisters();
-            for(int i=0; i<cur->extern_declarations->size(); ++i){
+            for(int i=0; i<cur->extern_declarations->size(); ++i) {
                 flag = check((*(cur->extern_declarations))[i], table) && flag ;
             }
-            if(table->count("main")==0 || table->getItem("main")->definition_type != type_function){
+            if (table->count("main")==0 || table->getItem("main")->definition_type != type_function) {
                 cout << "Error: The program does not have an entrance 'main'." << endl;
                 flag = false;
             }
             break;
         case Declaration:
-            switch(cur->tem_DeclarationType){
+            switch(cur->tem_DeclarationType) {
                 case Dec_Global_Variable_Array:
-                    for(int i=0; i<cur->tt_Var_Arr_Dec_Info_Vector->size(); ++i){
+                    for(int i=0; i<cur->tt_Var_Arr_Dec_Info_Vector->size(); ++i) {
                         flag = defineGlobal_Var_Array((*(cur->tt_Var_Arr_Dec_Info_Vector))[i], table, cur->tg_LineNum) && flag;
                     }
                     break;
@@ -127,7 +126,7 @@ bool check(Node* cur, SymbolTable* table){
                     flag = defineGlobal_Struct(cur->ms_StructName, cur->tt_StructMembers, cur->tt_StructDeclarations, table, cur->tg_LineNum);
                     break;
                 case Dec_Local_Variable_Array:
-                    for(auto it = cur->tt_Var_Arr_Dec_Info_Vector->begin(); it != cur->tt_Var_Arr_Dec_Info_Vector->end(); ++it){
+                    for(auto it = cur->tt_Var_Arr_Dec_Info_Vector->begin(); it != cur->tt_Var_Arr_Dec_Info_Vector->end(); ++it) {
                         flag = defineLocal_Var_Array(*it, table, cur->tg_LineNum) && flag;
                     }
                     break;
@@ -140,14 +139,14 @@ bool check(Node* cur, SymbolTable* table){
             flag = defineFunction(cur, table, cur->tg_LineNum);
             break;
         case Statement:
-            switch(cur->tem_StatementType){
+            switch(cur->tem_StatementType) {
                 case Stmt_StatementBlock:
-                    for(auto it = cur->declarations_in_block->begin(); it != cur->declarations_in_block->end(); ++it){
+                    for(auto it = cur->declarations_in_block->begin(); it != cur->declarations_in_block->end(); ++it) {
                         flag = check(*it, table) && flag;
                     }
-                    for(auto it = cur->statements_in_block->begin(); it != cur->statements_in_block->end(); ++it){
-                        if(*it==NULL) continue;
-                        if((*it)->tem_NodeType==Statement && (*it)->tem_StatementType==Stmt_StatementBlock){
+                    for(auto it = cur->statements_in_block->begin(); it != cur->statements_in_block->end(); ++it) {
+                        if (*it==NULL) continue;
+                        if ((*it)->tem_NodeType==Statement && (*it)->tem_StatementType==Stmt_StatementBlock) {
                             table = pushScope(table);
                             flag = check(*it, table) && flag;
                             table = popScope(table);
@@ -185,7 +184,7 @@ bool check(Node* cur, SymbolTable* table){
             }
             break;
         case Expression:
-            switch(cur->tem_ExpressionType){
+            switch(cur->tem_ExpressionType) {
                 case Exp_Assign:
                     flag = defineAssign_Expression(cur, table, cur->tg_LineNum);
                     break;
@@ -219,29 +218,29 @@ bool check(Node* cur, SymbolTable* table){
     return flag;
 }
 
-bool defineGlobal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum){
-    if(table->count(info->ms_Name)!=0){
+bool defineGlobal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum) {
+    if (table->count(info->ms_Name)!=0) {
         cout << "Error: Line " << linenum << " : '" << info->ms_Name << "' has already been declared in this scope." << endl;
         return false;
     }
     else {
         Definition* temp = new Definition();
-        if(info->tt_ArrayDeclarationSubscriptList.size()!=0){   
+        if (info->tt_ArrayDeclarationSubscriptList.size()!=0) {   
             int array_num = 1;   // Count Array Size
             for(int i=0; i<info->tt_ArrayDeclarationSubscriptList.size(); ++i) array_num *= (info->tt_ArrayDeclarationSubscriptList)[i];
-            if(array_num<=0){
+            if (array_num<=0) {
                 cout << "Error: Line " << linenum << " : An array is initialized with non-positive size." << endl;
                 return false;
             }
             else {
 
-                if(array_num < info->tt_InitList->size()) {
+                if (array_num < info->tt_InitList->size()) {
                     cout << "Error: Line " << linenum << " : The initialize list is too large for '" << info->ms_Name << "'." << endl;
                     return false;
                 }
                 else {
-                    for(int i=0; i<info->tt_InitList->size(); ++i){
-                        if((*(info->tt_InitList))[i]->tem_ExpressionType != Exp_Int){
+                    for(int i=0; i<info->tt_InitList->size(); ++i) {
+                        if ((*(info->tt_InitList))[i]->tem_ExpressionType != Exp_Int) {
                             cout << "Error: Line " << linenum << " : The initialize value should be a constant expression." << endl;
                             return false;
                         }
@@ -259,11 +258,11 @@ bool defineGlobal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* ta
                 }
             }
         } else{
-            if(info->tt_InitList->size() > 1){
+            if (info->tt_InitList->size() > 1) {
                 cout << "Error: Line " << linenum << " : Only one initialize number is required for variable '" << info->ms_Name << "'." << endl;
                 return false;
-            } else if(info->tt_InitList->size() == 1){
-                if((*(info->tt_InitList))[0]->tem_ExpressionType != Exp_Int){
+            } else if (info->tt_InitList->size() == 1) {
+                if ((*(info->tt_InitList))[0]->tem_ExpressionType != Exp_Int) {
                     cout << "Error: Line " << linenum << " : The initialize value should be a constant expression." << endl;
                     return false;
                 } else temp->variable_init_value = (*(info->tt_InitList))[0]->tg_IntExpression_Val;
@@ -279,31 +278,31 @@ bool defineGlobal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* ta
     return true;
 }
 
-bool defineLocal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum){ // Local Variable and Array initial
+bool defineLocal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum) { // Local Variable and Array initial
     bool flag = true;
-    if(table->count(info->ms_Name)!=0){
+    if (table->count(info->ms_Name)!=0) {
         cout << "Error: Line " << linenum << " : '" << info->ms_Name << "' has already been declared in this scope." << endl;
         flag = false;
     }
     else {
         Definition* temp = new Definition();
         // Array
-        if(info->tt_ArrayDeclarationSubscriptList.size()!=0){   
+        if (info->tt_ArrayDeclarationSubscriptList.size()!=0) {   
             int array_num = 1;   // Count Array Size
             for(int i=0; i<info->tt_ArrayDeclarationSubscriptList.size(); ++i) array_num *= (info->tt_ArrayDeclarationSubscriptList)[i];
-            if(array_num<=0){
+            if (array_num<=0) {
                 cout << "Error: Line " << linenum << " : An array is initialized with non-positive size." << endl;
                 flag = false;
             }
             else {
-                if(array_num < info->tt_InitList->size()) {
+                if (array_num < info->tt_InitList->size()) {
                     cout << "Error: Line " << linenum << " : The initialize list is too large for '" << info->ms_Name << "'." << endl;
                     flag = false;
                 }
                 else {
                     int originStackSize = stackSize;
-                    for(int i=0; i<info->tt_InitList->size(); ++i){
-                        if((*(info->tt_InitList))[i]->tem_ExpressionType != Exp_Int){
+                    for(int i=0; i<info->tt_InitList->size(); ++i) {
+                        if ((*(info->tt_InitList))[i]->tem_ExpressionType != Exp_Int) {
                             cout << "Error: Line " << linenum << " : The initialize value should be a constant expression." << endl;
                             flag = false;
                         }
@@ -326,10 +325,10 @@ bool defineLocal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* tab
                 }
             }
         } else{
-            if(info->tt_InitList->size() > 1){
+            if (info->tt_InitList->size() > 1) {
                 cout << "Error: Line " << linenum << " : Only one initialize number is required for variable '" << info->ms_Name << "'." << endl;
                 flag = false;
-            } else if(info->tt_InitList->size() == 1){
+            } else if (info->tt_InitList->size() == 1) {
                 temp->stackOffsite = stackSize;
                 stackSize += 4;
                 flag = check((*(info->tt_InitList))[0], table);
@@ -348,27 +347,27 @@ bool defineLocal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* tab
     return flag;
 }
 
-bool defineGlobal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum){ // Global Struct Initial
-    if(structname=="#"){
-        if(structMembers->size()==0 || structDeclarations->size()==0){
+bool defineGlobal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum) { // Global Struct Initial
+    if (structname=="#") {
+        if (structMembers->size()==0 || structDeclarations->size()==0) {
             cout << "Error: Line " << linenum << " : Struct Declaration with no members or name." << endl;
             return false;
         }
         structname += (Global_Struct_No_Name++);
     }
-    if(structMembers->size()==0){
-        if(table->count(structname)!=0 && (table->getItem(structname)->definition_type != type_global_struct_virtual)){
+    if (structMembers->size()==0) {
+        if (table->count(structname)!=0 && (table->getItem(structname)->definition_type != type_global_struct_virtual)) {
             cout << "Error: Line " << linenum << " : Struct type '" << structname << "' has already been declared in this scope." << endl;
             return false;
         }
-        if(table->count(structname) == 0){ // Predeclaration with no initial
+        if (table->count(structname) == 0) { // Predeclaration with no initial
             Definition* tt = new Definition();
             tt->definition_type = type_global_struct_virtual;
             table->symbol_map[structname] = tt;
             StructType* tmp = new StructType();
             table->struct_map[structname] = tmp;
-            for(int i=0; i<structDeclarations->size(); ++i){
-                if(table->count((*structDeclarations)[i])!=0){
+            for(int i=0; i<structDeclarations->size(); ++i) {
+                if (table->count((*structDeclarations)[i])!=0) {
                     cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                     return false;
                 }
@@ -379,9 +378,9 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
                 table->symbol_map[(*structDeclarations)[i]] = temp;
                 tmp->Struct_List.push_back((*structDeclarations)[i]);
             }
-        } else if(table->getItem(structname)->definition_type == type_global_struct_virtual){
-            for(int i=0; i<structDeclarations->size(); ++i){
-                if(table->count((*structDeclarations)[i])!=0){
+        } else if (table->getItem(structname)->definition_type == type_global_struct_virtual) {
+            for(int i=0; i<structDeclarations->size(); ++i) {
+                if (table->count((*structDeclarations)[i])!=0) {
                     cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                     return false;
                 }
@@ -391,7 +390,7 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
                 temp->table = table;
                 table->symbol_map[(*structDeclarations)[i]] = temp;
                 table->struct_map[structname]->Struct_List.push_back((*structDeclarations)[i]);
-                if(table->struct_map[structname]->size()!=0){  // Already be initialized with members
+                if (table->struct_map[structname]->size()!=0) {  // Already be initialized with members
                     instructions->push_back(new ArrayGlobal((*structDeclarations)[i], 4 * table->struct_map[structname]->size()));
                     intermediates->push_back(new InterStructGlobal((*structDeclarations)[i], 4 * table->struct_map[structname]->size()));
                 }
@@ -399,12 +398,12 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
         }
     } else {
 
-        if(table->count(structname)!=0 && ((table->getItem(structname)->definition_type != type_global_struct_virtual) ||
+        if (table->count(structname)!=0 && ((table->getItem(structname)->definition_type != type_global_struct_virtual) ||
                                              (table->getItem(structname)->definition_type == type_global_struct_virtual && table->struct_map[structname]->size()!=0))) {
             cout << "Error: Line " << linenum << " : Struct type '" << structname << "' has already been declared in this scope." << endl;
             return false;
         }
-        if (table->count(structname)==0){
+        if (table->count(structname)==0) {
             Definition* tt = new Definition();
             tt->definition_type = type_global_struct_virtual;
             table->symbol_map[structname] = tt;
@@ -412,15 +411,15 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
             table->struct_map[structname] = tmp;
         }
 
-        for(int i=0; i<structMembers->size(); ++i){
-            if(table->struct_map[structname]->count((*structMembers)[i])!=0){
+        for(int i=0; i<structMembers->size(); ++i) {
+            if (table->struct_map[structname]->count((*structMembers)[i])!=0) {
                 cout << "Error: Line " << linenum << " : Redeclartion member '" << (*structMembers)[i] << "' in the same struct type." << endl;
                 return false;
             }
             (((table->struct_map)[structname])->Struct_Offsites)[(*structMembers)[i]] = i * 4;
         }
-        for(int i=0; i<structDeclarations->size(); ++i){
-            if(table->count((*structDeclarations)[i])!=0){
+        for(int i=0; i<structDeclarations->size(); ++i) {
+            if (table->count((*structDeclarations)[i])!=0) {
                 cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                 return false;
             }
@@ -432,7 +431,7 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
             table->struct_map[structname]->Struct_List.push_back((*structDeclarations)[i]);
         }
         
-        for(int i=0; i<table->struct_map[structname]->Struct_List.size(); ++i){
+        for(int i=0; i<table->struct_map[structname]->Struct_List.size(); ++i) {
             instructions->push_back(new ArrayGlobal((*structDeclarations)[i], 4 * table->struct_map[structname]->size()));
             intermediates->push_back(new InterStructGlobal((*structDeclarations)[i], 4 * table->struct_map[structname]->size()));
         }
@@ -440,27 +439,27 @@ bool defineGlobal_Struct(string structname, vector<string>* structMembers, vecto
     return true;
 }
 
-bool defineLocal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum){    // Local Struct Initial
-    if(structname=="#"){
-        if(structMembers->size()==0 || structDeclarations->size()==0){
+bool defineLocal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum) {    // Local Struct Initial
+    if (structname=="#") {
+        if (structMembers->size()==0 || structDeclarations->size()==0) {
             cout << "Error: Line " << linenum << " : Struct Declaration with no members or name." << endl;
             return false;
         }
         structname += (Global_Struct_No_Name++);
     }
-    if(structMembers->size()==0){
-        if(table->count(structname)!=0 && (table->getItem(structname)->definition_type != type_global_struct_virtual)){
+    if (structMembers->size()==0) {
+        if (table->count(structname)!=0 && (table->getItem(structname)->definition_type != type_global_struct_virtual)) {
             cout << "Error: Line " << linenum << " : Struct type '" << structname << "' has already been declared in this scope." << endl;
             return false;
         }
-        if(table->count(structname) == 0){ // Predeclaration with no initial
+        if (table->count(structname) == 0) { // Predeclaration with no initial
             Definition* tt = new Definition();
             tt->definition_type = type_local_struct_virtual;
             table->symbol_map[structname] = tt;
             StructType* tmp = new StructType();
             table->struct_map[structname] = tmp;
-            for(int i=0; i<structDeclarations->size(); ++i){
-                if(table->count((*structDeclarations)[i])!=0){
+            for(int i=0; i<structDeclarations->size(); ++i) {
+                if (table->count((*structDeclarations)[i])!=0) {
                     cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                     return false;
                 }
@@ -471,9 +470,9 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
                 table->symbol_map[(*structDeclarations)[i]] = temp;
                 tmp->Struct_List.push_back((*structDeclarations)[i]);
             }
-        } else if(table->getItem(structname)->definition_type == type_local_struct_virtual){
-            for(int i=0; i<structDeclarations->size(); ++i){
-                if(table->count((*structDeclarations)[i])!=0){
+        } else if (table->getItem(structname)->definition_type == type_local_struct_virtual) {
+            for(int i=0; i<structDeclarations->size(); ++i) {
+                if (table->count((*structDeclarations)[i])!=0) {
                     cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                     return false;
                 }
@@ -484,7 +483,7 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
                 temp->table = table;
                 table->symbol_map[(*structDeclarations)[i]] = temp;
                 table->struct_map[structname]->Struct_List.push_back((*structDeclarations)[i]);
-                if(table->struct_map[structname]->size()!=0){  // Already be initialized with members
+                if (table->struct_map[structname]->size()!=0) {  // Already be initialized with members
                     temp->stackOffsite = stackSize;
                     stackSize += table->struct_map[structname]->size() * 4;
                     intermediates->push_back(new InterStructLocal((*structDeclarations)[i], table->struct_map[structname]->size() * 4, temp->stackOffsite));
@@ -493,12 +492,12 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
         }
     } else {
 
-        if(table->count(structname)!=0 && ((table->getItem(structname)->definition_type != type_global_struct_virtual) ||
+        if (table->count(structname)!=0 && ((table->getItem(structname)->definition_type != type_global_struct_virtual) ||
                                              (table->getItem(structname)->definition_type == type_global_struct_virtual && table->struct_map[structname]->size()!=0))) {
             cout << "Error: Line " << linenum << " : Struct type '" << structname << "' has already been declared in this scope." << endl;
             return false;
         }
-        if (table->count(structname)==0){
+        if (table->count(structname)==0) {
             Definition* tt = new Definition();
             tt->definition_type = type_local_struct_virtual;
             table->symbol_map[structname] = tt;
@@ -506,15 +505,15 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
             table->struct_map[structname] = tmp;
         }
 
-        for(int i=0; i<structMembers->size(); ++i){
-            if(table->struct_map[structname]->count((*structMembers)[i])!=0){
+        for(int i=0; i<structMembers->size(); ++i) {
+            if (table->struct_map[structname]->count((*structMembers)[i])!=0) {
                 cout << "Error: Line " << linenum << " : Redeclartion member '" << (*structMembers)[i] << "' in the same struct type." << endl;
                 return false;
             }
             (((table->struct_map)[structname])->Struct_Offsites)[(*structMembers)[i]] = i * 4;
         }
-        for(int i=0; i<structDeclarations->size(); ++i){
-            if(table->count((*structDeclarations)[i])!=0){
+        for(int i=0; i<structDeclarations->size(); ++i) {
+            if (table->count((*structDeclarations)[i])!=0) {
                 cout << "Error: Line " << linenum << " : Struct variable '" << (*structDeclarations)[i] << "' has already been declared in this scope." << endl;
                 return false;
             }
@@ -528,7 +527,7 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
             table->struct_map[structname]->Struct_List.push_back((*structDeclarations)[i]);
         }
         
-        for(int i=0; i<table->struct_map[structname]->Struct_List.size(); ++i){
+        for(int i=0; i<table->struct_map[structname]->Struct_List.size(); ++i) {
             string nn = table->struct_map[structname]->Struct_List[i];
             intermediates->push_back(new InterStructLocal(table->struct_map[structname]->Struct_List[i], table->struct_map[structname]->size() * 4, table->symbol_map[nn]->stackOffsite));
         }
@@ -537,11 +536,11 @@ bool defineLocal_Struct(string structname, vector<string>* structMembers, vector
 }
 
 // Function declaration
-bool defineFunction(Node* cur, SymbolTable* table, int linenum){ 
+bool defineFunction(Node* cur, SymbolTable* table, int linenum) { 
     reclaimRegisters();
     reclaimTemporarys();
     labelIndex = 'a';
-    if(table->count(cur->ms_Name)!=0){
+    if (table->count(cur->ms_Name)!=0) {
         cout << "Error: Line " << linenum << " : Function '" << cur->ms_Name << "' has already been declared in this scope." << endl;
         return false;
     }
@@ -556,8 +555,8 @@ bool defineFunction(Node* cur, SymbolTable* table, int linenum){
 
     stackSize = 0;
 
-    for(auto it=cur->parameters->begin(); it!=cur->parameters->end(); ++it){
-        if(table->count(*it)!=0){
+    for(auto it=cur->parameters->begin(); it!=cur->parameters->end(); ++it) {
+        if (table->count(*it)!=0) {
             cout << "Error: Line "<< linenum << " : Variable '" << *it << "' has already been declared in this scope." << endl;
             return false;
         }
@@ -576,7 +575,7 @@ bool defineFunction(Node* cur, SymbolTable* table, int linenum){
 
     stackSize = 8;
     
-    if(!check(cur->function_Body, table)) return false;
+    if (!check(cur->function_Body, table)) return false;
 
     table = popScope(table);
         
@@ -590,10 +589,10 @@ bool defineFunction(Node* cur, SymbolTable* table, int linenum){
 }
 
 // If Statement
-bool defineIf_Statement(Node* cur, SymbolTable* table, int linenum){
+bool defineIf_Statement(Node* cur, SymbolTable* table, int linenum) {
     string afterLabel = label + "_endif_" + labelIndex;
     labelIndex++;
-    if(cur->if_Expression==NULL) {
+    if (cur->if_Expression==NULL) {
         cout << "Error: Line " << linenum << " : Condition for if statement can't be empty." << endl;
         return false;
     }
@@ -604,8 +603,8 @@ bool defineIf_Statement(Node* cur, SymbolTable* table, int linenum){
     intermediates->push_back(new IfFalseGoto(tp, afterLabel));
     returnRegister(cond);
     returnTemporary(tp);
-    if(cur->then_Statement!=NULL){
-        if(cur->then_Statement->tem_StatementType==Stmt_StatementBlock){
+    if (cur->then_Statement!=NULL) {
+        if (cur->then_Statement->tem_StatementType==Stmt_StatementBlock) {
             table = pushScope(table);
             flag = check(cur->then_Statement, table) && flag;
             table = popScope(table);
@@ -619,11 +618,11 @@ bool defineIf_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // If_else Statement
-bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum){
+bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum) {
     string elseLabel = label + "_else_" + labelIndex;
     string afterLabel = label + "_endifelse_" + labelIndex;
     labelIndex++;
-    if(cur->if_Expression==NULL) {
+    if (cur->if_Expression==NULL) {
         cout << "Error: Line " << linenum << " : Condition for if statement can't be empty." << endl;
         return false;
     }
@@ -634,8 +633,8 @@ bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum){
     intermediates->push_back(new IfFalseGoto(tp, elseLabel));
     returnRegister(cond);
     returnTemporary(tp);
-    if(cur->then_Statement!=NULL){
-        if(cur->then_Statement->tem_StatementType==Stmt_StatementBlock){
+    if (cur->then_Statement!=NULL) {
+        if (cur->then_Statement->tem_StatementType==Stmt_StatementBlock) {
             table = pushScope(table);
             flag = check(cur->then_Statement, table) && flag;
             table = popScope(table);
@@ -647,8 +646,8 @@ bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum){
     intermediates->push_back(new InterJumpLabel(afterLabel));
     instructions->push_back(new Label(elseLabel));
     intermediates->push_back(new InterLabel(elseLabel));
-    if(cur->else_Statement!=NULL){
-        if(cur->else_Statement->tem_StatementType==Stmt_StatementBlock){
+    if (cur->else_Statement!=NULL) {
+        if (cur->else_Statement->tem_StatementType==Stmt_StatementBlock) {
             table = pushScope(table);
             flag = check(cur->else_Statement, table) && flag;
             table = popScope(table);
@@ -662,7 +661,7 @@ bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // For statement
-bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum){
+bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum) {
     string condLabel = label + "_for_cond_" + labelIndex;
     string incrLabel = label + "_for_incr_" + labelIndex;
     string endLabel = label + "_for_end_" + labelIndex;
@@ -673,14 +672,14 @@ bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum){
     currentLoopContinueLabel = incrLabel;
     currentLoopBreakLabel = endLabel;
     bool flag = true;
-    if(cur->init_Expression!=NULL) {
+    if (cur->init_Expression!=NULL) {
         flag = check(cur->init_Expression, table) && flag;
         returnRegister(intermediate[cur->init_Expression]);
         returnTemporary(interTemporary[cur->init_Expression]);
     }
     instructions->push_back(new Label(condLabel));
     intermediates->push_back(new InterLabel(condLabel));
-    if(cur->cond_Expression!=NULL) {
+    if (cur->cond_Expression!=NULL) {
         flag = check(cur->cond_Expression, table) && flag;
         Register cond = intermediate[cur->cond_Expression];
         Temporary tp = interTemporary[cur->cond_Expression];
@@ -689,8 +688,8 @@ bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum){
         returnRegister(cond);
         returnTemporary(tp);
     }
-    if(cur->for_Statement!=NULL){
-        if(cur->for_Statement->tem_StatementType==Stmt_StatementBlock){
+    if (cur->for_Statement!=NULL) {
+        if (cur->for_Statement->tem_StatementType==Stmt_StatementBlock) {
             table = pushScope(table);
             flag = check(cur->for_Statement, table) && flag;
             table = popScope(table);
@@ -700,7 +699,7 @@ bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum){
     }
     instructions->push_back(new Label(incrLabel));
     intermediates->push_back(new InterLabel(incrLabel));
-    if(cur->update_Expression!=NULL) {
+    if (cur->update_Expression!=NULL) {
         flag = check(cur->update_Expression, table) && flag;
         returnRegister(intermediate[cur->update_Expression]);
         returnTemporary(interTemporary[cur->update_Expression]);
@@ -715,8 +714,8 @@ bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // break statement
-bool defineBreak_Statement(Node* cur, SymbolTable* table, int linenum){
-    if(currentLoopBreakLabel == ""){
+bool defineBreak_Statement(Node* cur, SymbolTable* table, int linenum) {
+    if (currentLoopBreakLabel == "") {
         cout << "Error: Line " << linenum << " : Nothing to break out of." << endl;
         return false;
     }
@@ -726,8 +725,8 @@ bool defineBreak_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // continue statement
-bool defineContinue_Statement(Node* cur, SymbolTable* table, int linenum){
-    if(currentLoopContinueLabel == ""){
+bool defineContinue_Statement(Node* cur, SymbolTable* table, int linenum) {
+    if (currentLoopContinueLabel == "") {
         cout << "Error: Line " << linenum << " : No loop to continue." << endl;
         return false;
     }
@@ -737,8 +736,8 @@ bool defineContinue_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // return statement
-bool defineReturn_Statement(Node* cur, SymbolTable* table, int linenum){
-    if(cur->return_Expression==NULL) {
+bool defineReturn_Statement(Node* cur, SymbolTable* table, int linenum) {
+    if (cur->return_Expression==NULL) {
         cout << "Error: Line " << linenum << " : Return object can't be empty." << endl;
         return false;
     }
@@ -754,25 +753,25 @@ bool defineReturn_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // get the definition information from the symbol table with the given name
-Definition* getDefinition(string name, SymbolTable* table, int linenum){
+Definition* getDefinition(string name, SymbolTable* table, int linenum) {
     SymbolTable* tmp_table = table;
     do{
-        if(table->count(name)!=0) return table->getItem(name);
+        if (table->count(name)!=0) return table->getItem(name);
         table = table->parent;
     } while(table!=NULL);
     while(tmp_table->parent!=NULL) tmp_table = tmp_table->parent;
-    if(tmp_table->count(name+"_global")!=0) return tmp_table->getItem(name+"_global");
+    if (tmp_table->count(name+"_global")!=0) return tmp_table->getItem(name+"_global");
     return NULL;
 }
 
 // get the address of a global or local variable
-Register getVarAddress(Node* cur, SymbolTable* table, int linenum){
+Register getVarAddress(Node* cur, SymbolTable* table, int linenum) {
     Definition* tmp = getDefinition(cur->ms_Name, table, linenum);
-    if(tmp==NULL) {
+    if (tmp==NULL) {
         cout <<"Error: Line " << linenum << " : No variable is called '" << cur->ms_Name << "'." << endl;
         return R_ZERO;
     }
-    if(tmp->definition_type!=type_local_int && tmp->definition_type!=type_global_int && tmp->definition_type!=type_parameter){
+    if (tmp->definition_type!=type_local_int && tmp->definition_type!=type_global_int && tmp->definition_type!=type_parameter) {
         cout <<"Error: Line " << linenum << " : '" <<cur->ms_Name << "' is not a variable." << endl;
         return R_ZERO;
     }
@@ -780,7 +779,7 @@ Register getVarAddress(Node* cur, SymbolTable* table, int linenum){
     // Temporary tp = getFreeTemporary();
     // intermediates->push_back(new MoveVariable(tp, cur->ms_Name));
     // interTemporary[cur] = tp;
-    switch(tmp->definition_type){
+    switch(tmp->definition_type) {
         case type_local_int:
             instructions->push_back(new BinOpImmediate("addi", result, R_SP, tmp->stackOffsite));
             break;
@@ -795,21 +794,21 @@ Register getVarAddress(Node* cur, SymbolTable* table, int linenum){
 }
 
 // get the address of a global or local struct
-Register getStructMemberAddress(Node* cur, SymbolTable* table, int linenum){
+Register getStructMemberAddress(Node* cur, SymbolTable* table, int linenum) {
     Definition* tmp = getDefinition(cur->ms_Name, table, linenum);
-    if(tmp==NULL){
+    if (tmp==NULL) {
         cout << "Error: Line " << linenum << " : No struct is called '" << cur->ms_Name << "'." << endl;
         return R_ZERO;
     }
-    if(tmp->definition_type!=type_local_struct && tmp->definition_type!=type_global_struct){
+    if (tmp->definition_type!=type_local_struct && tmp->definition_type!=type_global_struct) {
         cout << "Error: Line " << linenum << " : '" << cur->ms_Name << "' is not a struct type." << endl;
         return R_ZERO;
     }
-    if(tmp->table->struct_map[tmp->struct_type]->Struct_Offsites.count(cur->ms_MemberName)==0){
+    if (tmp->table->struct_map[tmp->struct_type]->Struct_Offsites.count(cur->ms_MemberName)==0) {
         cout << "Error: Line " << linenum << " : '" << cur->ms_Name << "' does not have member '" << cur->ms_MemberName << "'." << endl;
         return R_ZERO;
     }
-    if(tmp->definition_type==type_local_struct){
+    if (tmp->definition_type==type_local_struct) {
         Register address = getFreeRegister();
         Temporary tp = getFreeTemporary();
         int offset = tmp->stackOffsite;
@@ -819,7 +818,7 @@ Register getStructMemberAddress(Node* cur, SymbolTable* table, int linenum){
         interTemporary[cur] = tp;
         return address;
     }
-    if(tmp->definition_type==type_global_struct){
+    if (tmp->definition_type==type_global_struct) {
         Register address = getFreeRegister();
         Temporary tp = getFreeTemporary();
         instructions->push_back(new LoadAddress(address, cur->ms_Name+"_global"));
@@ -831,17 +830,17 @@ Register getStructMemberAddress(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Get the address of a local or global array 
-Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum){
+Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum) {
     Definition* tmp = getDefinition(cur->ms_Name, table, linenum);
-    if(tmp==NULL){
+    if (tmp==NULL) {
         cout << "Error: Line " << linenum << " : No array is called '" << cur->ms_Name << "'." << endl;
         return R_ZERO;
     }
-    if(tmp->definition_type!=type_local_array && tmp->definition_type!=type_global_array){
+    if (tmp->definition_type!=type_local_array && tmp->definition_type!=type_global_array) {
         cout << "Error: Line " << linenum << " : '" << cur->ms_Name << "' is not an array type." << endl;
         return R_ZERO;
     }
-    if(cur->tt_ArraySubscriptList->size() != tmp->array_subscript_num){
+    if (cur->tt_ArraySubscriptList->size() != tmp->array_subscript_num) {
         cout << "Error: Line " << linenum << " : '" << cur->ms_Name << "' dimension not fit." << endl;
         return R_ZERO;
     }
@@ -855,8 +854,8 @@ Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum){
     Register temp;
     Temporary tp;
     int i=0;
-    for(auto it = cur->tt_ArraySubscriptList->begin(); it != cur->tt_ArraySubscriptList->end(); ++it){
-        if(*it==NULL) {
+    for(auto it = cur->tt_ArraySubscriptList->begin(); it != cur->tt_ArraySubscriptList->end(); ++it) {
+        if (*it==NULL) {
             cout << "Error: Line " << linenum <<" : The value of an array subscript can not be empty." << endl;
             return false;
         }
@@ -879,9 +878,9 @@ Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum){
     returnRegister(rt);
     returnTemporary(rtp);
     temp = getFreeRegister();
-    if(tmp->definition_type==type_local_array){
+    if (tmp->definition_type==type_local_array) {
         instructions->push_back(new BinOpImmediate("addi", temp, R_SP, tmp->stackOffsite));
-    } else if(tmp->definition_type==type_global_array){
+    } else if (tmp->definition_type==type_global_array) {
         instructions->push_back(new LoadAddress(temp, cur->ms_Name+"_global"));
     }
     instructions->push_back(new BinOp("add", result, temp, result));
@@ -891,8 +890,8 @@ Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum){
 }
 
 // binary assign expression
-bool defineAssign_Expression(Node* cur, SymbolTable* table, int linenum){
-    if(cur->left_Expression->mb_LValueExpression == false){
+bool defineAssign_Expression(Node* cur, SymbolTable* table, int linenum) {
+    if (cur->left_Expression->mb_LValueExpression == false) {
         cout << "Error: Line " << linenum << " : Attempting to assign a non L-value." << endl;
         return false;
     }
@@ -901,21 +900,21 @@ bool defineAssign_Expression(Node* cur, SymbolTable* table, int linenum){
     Temporary v = interTemporary[cur->right_Expression];
     Register address;
     Temporary a;
-    switch(cur->left_Expression->tem_ExpressionType){
+    switch(cur->left_Expression->tem_ExpressionType) {
         case Exp_Variable:
             address = getVarAddress(cur->left_Expression, table, cur->left_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             intermediates->push_back(new MoveToVariable(v, cur->left_Expression->ms_Name));
             break;
         case Exp_Array:
             address = getArraySubscriptAddress(cur->left_Expression, table, cur->left_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             a = interTemporary[cur->left_Expression];
             intermediates->push_back(new MoveToArray(a, cur->left_Expression->ms_Name, a));
             break;
         case Exp_StructMember:
             address = getStructMemberAddress(cur->left_Expression, table, cur->left_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             intermediates->push_back(new MoveToStruct(v, cur->left_Expression->ms_Name, cur->left_Expression->ms_MemberName));
             break;
     }
@@ -927,18 +926,18 @@ bool defineAssign_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Unary assign expression for ++ and --
-bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register address;
     Temporary tp;
     Temporary a;
-    if(cur->right_Expression->mb_LValueExpression == false){
+    if (cur->right_Expression->mb_LValueExpression == false) {
         cout << "Error: Line " << linenum << " : Attempting to assign a non L-value." << endl;
         return false;
     }
-    switch(cur->right_Expression->tem_ExpressionType){
+    switch(cur->right_Expression->tem_ExpressionType) {
         case Exp_Variable:
             address = getVarAddress(cur->right_Expression, table, cur->right_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             tp = getFreeTemporary();
             intermediates->push_back(new MoveVariable(tp, cur->right_Expression->ms_Name));
             intermediates->push_back(new InterUnaryOp("inc", tp, tp));
@@ -947,7 +946,7 @@ bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum){
         case Exp_Array:
             a = getFreeTemporary();
             address = getArraySubscriptAddress(cur->right_Expression, table, cur->right_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             a = interTemporary[cur->right_Expression];
             intermediates->push_back(new MoveArray(tp, cur->right_Expression->ms_Name, a));
             intermediates->push_back(new InterUnaryOp("inc", tp, tp));
@@ -956,7 +955,7 @@ bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum){
             break;
         case Exp_StructMember:
             address = getStructMemberAddress(cur->right_Expression, table, cur->right_Expression->tg_LineNum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             tp = interTemporary[cur->right_Expression];
             intermediates->push_back(new InterUnaryOp("inc", tp, tp));
             intermediates->push_back(new MoveToStruct(tp, cur->right_Expression->ms_Name, cur->right_Expression->ms_MemberName));
@@ -964,8 +963,8 @@ bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum){
     }
     Register temp = getFreeRegister();
     instructions->push_back(new LoadWord(temp, address, 0));
-    if(cur->tem_OP==OP_PREINC) instructions->push_back(new BinOpImmediate("addi", temp, temp, 1));
-    else if(cur->tem_OP==OP_PREDEC) instructions->push_back(new BinOpImmediate("addi", temp, temp, -1));
+    if (cur->tem_OP==OP_PREINC) instructions->push_back(new BinOpImmediate("addi", temp, temp, 1));
+    else if (cur->tem_OP==OP_PREDEC) instructions->push_back(new BinOpImmediate("addi", temp, temp, -1));
     instructions->push_back(new StoreWord(temp, address, 0));
     returnRegister(address);
     intermediate[cur] = temp;
@@ -974,7 +973,7 @@ bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Get the value of an integer expression
-bool defineInt_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineInt_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register result = getFreeRegister();
     Temporary tp = getFreeTemporary();
     instructions->push_back(new LoadImmediate(result, cur->tg_IntExpression_Val));
@@ -985,7 +984,7 @@ bool defineInt_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Binary operator expression
-bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register left;
     Register right;
     Temporary l, r;
@@ -993,7 +992,7 @@ bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
     left = intermediate[cur->left_Expression];
     l = interTemporary[cur->left_Expression];
 
-    if(cur->tem_OP!=OP_LOGICALAND && cur->tem_OP!=OP_LOGICALOR){
+    if (cur->tem_OP!=OP_LOGICALAND && cur->tem_OP!=OP_LOGICALOR) {
         flag = check(cur->right_Expression, table) && flag;
         right = intermediate[cur->right_Expression];
         r = interTemporary[cur->right_Expression];
@@ -1001,7 +1000,7 @@ bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
     Register ret = getFreeRegister();
     Temporary tp = getFreeTemporary();
     string shortcircuitLabel;
-    switch(cur->tem_OP){
+    switch(cur->tem_OP) {
         case OP_MUL: instructions->push_back(new BinOp("mul", ret, left, right));
                     intermediates->push_back(new InterBinOp("mul", l, r, tp)); break;
         case OP_DIV: instructions->push_back(new BinOp("div", ret, left, right));
@@ -1075,11 +1074,11 @@ bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Unary operator expression
-bool defineUnaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineUnaryOp_Expression(Node* cur, SymbolTable* table, int linenum) {
     bool flag = check(cur->right_Expression, table);
     Register ret = intermediate[cur->right_Expression];
     Temporary tp = interTemporary[cur->right_Expression];
-    switch(cur->tem_OP){
+    switch(cur->tem_OP) {
         case OP_MINUS: instructions->push_back(new BinOp("sub", ret, R_ZERO, ret)); 
                     intermediates->push_back(new InterUnaryOp("minus", tp, tp)); break;
         case OP_BITNOT: instructions->push_back(new BinOp("nor", ret, R_ZERO, ret));
@@ -1093,9 +1092,9 @@ bool defineUnaryOp_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Get the value of a variable
-bool defineVariable_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineVariable_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register address = getVarAddress(cur, table, linenum);
-    if(address==R_ZERO) return false;
+    if (address==R_ZERO) return false;
     Temporary tp = getFreeTemporary();
     instructions->push_back(new LoadWord(address, address, 0));
     intermediates->push_back(new MoveVariable(tp, cur->ms_Name));
@@ -1105,9 +1104,9 @@ bool defineVariable_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Get the value of an array member
-bool defineArray_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineArray_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register result = getArraySubscriptAddress(cur, table, linenum);
-    if(result==R_ZERO) return false;
+    if (result==R_ZERO) return false;
     Temporary tp = interTemporary[cur];
     instructions->push_back(new LoadWord(result, result, 0));
     intermediates->push_back(new MoveArray(tp, cur->ms_Name, tp));
@@ -1117,15 +1116,15 @@ bool defineArray_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Do the function call
-bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum) {
     SymbolTable* tmp_table = table;
     while(tmp_table->parent!=NULL)tmp_table = tmp_table->parent;
-    if(tmp_table->count(cur->ms_Name)==0 || tmp_table->getItem(cur->ms_Name)->definition_type!=type_function){
+    if (tmp_table->count(cur->ms_Name)==0 || tmp_table->getItem(cur->ms_Name)->definition_type!=type_function) {
         cout << "Error: Line " << linenum << " : No declaration by name '" << cur->ms_Name << "'." << endl;
         return false;
     }
     Definition* tmp = tmp_table->getItem(cur->ms_Name);
-    if(cur->tt_ArgumentList->size() != tmp->parameter_number){
+    if (cur->tt_ArgumentList->size() != tmp->parameter_number) {
         cout << "Error: Line " << linenum << " : Function call does not have the same number of arguments as the function itself." << endl;
         return false;
     }
@@ -1134,7 +1133,7 @@ bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum){
 
     int paramOffset = oldStackOffset;
     bool flag = true;
-    for(auto it=cur->tt_ArgumentList->begin(); it!=cur->tt_ArgumentList->end(); ++it){
+    for(auto it=cur->tt_ArgumentList->begin(); it!=cur->tt_ArgumentList->end(); ++it) {
         flag = check(*it, table) && flag;
         Register argValue = intermediate[*it];
         instructions->push_back(new StoreWord(argValue, R_SP, paramOffset));
@@ -1143,7 +1142,7 @@ bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum){
     }
     instructions->push_back(new BinOpImmediate("addi", R_A0, R_SP, oldStackOffset));
     int regOffset = 0;
-    if(registersInUse.size() > 0) {
+    if (registersInUse.size() > 0) {
         for(auto it = registersInUse.begin(); it != registersInUse.end(); it++) {
             regOffset -= 4;
             instructions->push_back(new StoreWord(*it, R_SP, regOffset));
@@ -1153,7 +1152,7 @@ bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum){
     
     instructions->push_back(new JumpAndLink(cur->ms_Name));
     
-    if(registersInUse.size() > 0) {
+    if (registersInUse.size() > 0) {
         instructions->push_back(new BinOpImmediate("addi", R_SP, R_SP, -regOffset));
         regOffset = 0;
         for(auto it = registersInUse.begin(); it != registersInUse.end(); it++) {
@@ -1172,40 +1171,40 @@ bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Get the value of a struct member
-bool defineStructMember_Expression(Node* cur, SymbolTable* table, int linenum){
+bool defineStructMember_Expression(Node* cur, SymbolTable* table, int linenum) {
     Register address = getStructMemberAddress(cur, table, cur->tg_LineNum);
-    if(address==R_ZERO) return false;
+    if (address==R_ZERO) return false;
     instructions->push_back(new LoadWord(address, address, 0));
     intermediate[cur] = address;
     return true;
 }
 
 // Read statement
-bool defineRead_Statement(Node* cur, SymbolTable* table, int linenum){
-    if(cur->io_Expression==NULL){
+bool defineRead_Statement(Node* cur, SymbolTable* table, int linenum) {
+    if (cur->io_Expression==NULL) {
         cout << "Error: Line " << linenum << " : Read statement must has an argument." << endl;
         return false;
     }
-    if(cur->io_Expression->mb_LValueExpression==false){
+    if (cur->io_Expression->mb_LValueExpression==false) {
         cout << "Error: Line " << linenum << " : The read in value must be a l-value." << endl;
         return false;
     }
     Register address;
-    switch(cur->io_Expression->tem_ExpressionType){
+    switch(cur->io_Expression->tem_ExpressionType) {
         case Exp_Variable:
             address = getVarAddress(cur->io_Expression, table, linenum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             break;
         case Exp_Array:
             address = getArraySubscriptAddress(cur->io_Expression, table, linenum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             break;
         case Exp_StructMember:
             address = getStructMemberAddress(cur->io_Expression, table, linenum);
-            if(address==R_ZERO) return false;
+            if (address==R_ZERO) return false;
             break;
     }
-    if(address==R_ZERO) return false;
+    if (address==R_ZERO) return false;
     instructions->push_back(new BinOp("add", R_A1, R_V0, R_ZERO));
     // instructions->push_back(new BinOp("add", $R_A2, $R_A0, $R_ZERO));
     instructions->push_back(new LoadImmediate(R_V0, 5));
@@ -1219,12 +1218,12 @@ bool defineRead_Statement(Node* cur, SymbolTable* table, int linenum){
 }
 
 // Write Statement
-bool defineWrite_Statement(Node* cur, SymbolTable* table, int linenum){
-    if(cur->io_Expression==NULL){
+bool defineWrite_Statement(Node* cur, SymbolTable* table, int linenum) {
+    if (cur->io_Expression==NULL) {
         cout << "Error: Line " << linenum << " : Write statement must has an argument." << endl;
         return false;
     }
-    if(!check(cur->io_Expression, table)) return false;
+    if (!check(cur->io_Expression, table)) return false;
     Register tmp = intermediate[cur->io_Expression];
     instructions->push_back(new BinOp("add", R_A1, R_V0, R_ZERO));
     instructions->push_back(new BinOp("add", R_A2, R_A0, R_ZERO));

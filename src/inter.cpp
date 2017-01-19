@@ -50,13 +50,13 @@ const Temporary T_29 = 29;
 const Temporary T_30 = 30;
 
 template<class T>
-std::string toString(T t){
+std::string toString(T t) {
     std::stringstream s;
     s << t;
     return s.str();
 }
 
-string tempoStr(Temporary t){
+string tempoStr(Temporary t) {
     map<Temporary, string> replacee;
     replacee[T_0] = "#0";
     replacee[T_1] = "#1";
@@ -93,7 +93,7 @@ string tempoStr(Temporary t){
     return replacee[t];
 }
 
-ostream& operator<<(ostream& output, const Inter& inter){
+ostream& operator<<(ostream& output, const Inter& inter) {
     return inter.output(output);
 }
 
@@ -160,7 +160,7 @@ ostream& InterArrayGlobal::output(ostream& output) const {
     tmp += "\tsize\t";
     tmp += toString(Global_Array_Size);
     tmp += "\tinitial\t";
-    for(auto it=Initial_Values.begin(); it!=Initial_Values.end(); ++it){
+    for(auto it=Initial_Values.begin(); it!=Initial_Values.end(); ++it) {
         tmp += toString(*it);
         tmp += " ";
     }
@@ -193,7 +193,7 @@ ostream& InterArrayLocal::output(ostream& output) const {
     tmp += "\tsize\t";
     tmp += toString(Initial_Size);
     tmp += "\tinitial\t";
-    for(auto it=Initial_Values.begin(); it!=Initial_Values.end(); ++it){
+    for(auto it=Initial_Values.begin(); it!=Initial_Values.end(); ++it) {
         tmp += toString(*it);
         tmp += " ";
     }

@@ -83,8 +83,8 @@ struct Variable_ArrayDeclarationInfo {
     string ms_Name;
     vector<int> tt_ArrayDeclarationSubscriptList;
     vector<Node*>* tt_InitList;
-    Variable_ArrayDeclarationInfo(){}
-    ~Variable_ArrayDeclarationInfo(){}
+    Variable_ArrayDeclarationInfo() {}
+    ~Variable_ArrayDeclarationInfo() {}
 };
 struct Node {
     Node* parent;
@@ -134,25 +134,25 @@ struct Node {
 
     vector<Node*>* extern_declarations;
 
-    Node(int line_count, NodeType type){
+    Node(int line_count, NodeType type) {
         tg_LineNum = line_count;
         tem_NodeType = type;
     }
     
-    void initial_Expression_Int(int value){
+    void initial_Expression_Int(int value) {
         tem_ExpressionType = Exp_Int;
         tg_IntExpression_Val = value;
         mb_LValueExpression = false;
     }
     
-    void initial_Expression_BinaryOp(Node* left, OperatorType OP, Node* right){
+    void initial_Expression_BinaryOp(Node* left, OperatorType OP, Node* right) {
         mb_LValueExpression = false;
-        if(left->tem_ExpressionType == Exp_Int && right->tem_ExpressionType == Exp_Int){
+        if (left->tem_ExpressionType == Exp_Int && right->tem_ExpressionType == Exp_Int) {
             tem_ExpressionType = Exp_Int;
             int a = left->tg_IntExpression_Val;
             int b = right->tg_IntExpression_Val;
             int c;
-            switch(OP){
+            switch(OP) {
                 case OP_MUL: c = a * b; break;
                 case OP_DIV: c = a / b; break;
                 case OP_MOD: c = a % b; break;
@@ -183,12 +183,12 @@ struct Node {
          tem_OP = OP;
     }
 
-    void initial_Expression_UnaryOp(OperatorType OP, Node* right){
+    void initial_Expression_UnaryOp(OperatorType OP, Node* right) {
         mb_LValueExpression = false;
-        if(right->tem_ExpressionType == Exp_Int){
+        if (right->tem_ExpressionType == Exp_Int) {
             tem_ExpressionType = Exp_Int;
             int b = right->tg_IntExpression_Val;
-            switch(OP){
+            switch(OP) {
                 case OP_MINUS: b = -b; break;
                 case OP_LOGICALNOT: b = !b; break;
                 case OP_BITNOT: b = ~b; break;
@@ -202,25 +202,25 @@ struct Node {
         tem_OP = OP;
     }
 
-    void initial_Expression_Assign(Node* left, Node* right){
+    void initial_Expression_Assign(Node* left, Node* right) {
         tem_ExpressionType = Exp_Assign;
         mb_LValueExpression = false;
         left_Expression = left;
         right_Expression = right;
     }
 
-    void initial_Expression_UnaryAssign(OperatorType OP, Node* right){
+    void initial_Expression_UnaryAssign(OperatorType OP, Node* right) {
         tem_ExpressionType = Exp_UnaryAssign;
         mb_LValueExpression = false;
         right_Expression = right;
         tem_OP = OP;
     }
 
-    void initial_Expression_Variable_Array(string* name, vector<Node*>* subscriptList){
+    void initial_Expression_Variable_Array(string* name, vector<Node*>* subscriptList) {
         ms_Name = *name;
         delete name;
         mb_LValueExpression = true;
-        if(subscriptList->size()==0)
+        if (subscriptList->size()==0)
             tem_ExpressionType = Exp_Variable;
         else {
             tem_ExpressionType = Exp_Array;
@@ -228,8 +228,8 @@ struct Node {
         }
     }
 
-    void initial_Expression_FunctionCall(string* name, vector<Node*>* argumentList){
-        if(*name!="main") ms_Name = *name + "_global";
+    void initial_Expression_FunctionCall(string* name, vector<Node*>* argumentList) {
+        if (*name!="main") ms_Name = *name + "_global";
         else ms_Name = *name;
         delete name;
         mb_LValueExpression = false;
@@ -237,7 +237,7 @@ struct Node {
         tt_ArgumentList = argumentList;
     }
 
-    void initial_Expression_StructMember(string* name, string* memberName){
+    void initial_Expression_StructMember(string* name, string* memberName) {
         ms_Name = *name;
         delete name;
         ms_MemberName = *memberName;
@@ -247,20 +247,20 @@ struct Node {
     }
 
     // Declaration Utils
-    void initial_Declaration_Local_Variable_Array(vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector){
-        tt_Var_Arr_Dec_Info_Vector = mV_Var_Arr_Dec_Info_Vector;
+    void initial_Declaration_Local_Variable_Array(vector<Variable_ArrayDeclarationInfo*>* gt_Var_Arr_Dec_Info_Vector) {
+        tt_Var_Arr_Dec_Info_Vector = gt_Var_Arr_Dec_Info_Vector;
         tem_DeclarationType = Dec_Local_Variable_Array;
     }
 
-    void initial_Declaration_Global_Variable_Array(vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector){
-        tt_Var_Arr_Dec_Info_Vector = mV_Var_Arr_Dec_Info_Vector;
-        for(auto it = tt_Var_Arr_Dec_Info_Vector->begin(); it != tt_Var_Arr_Dec_Info_Vector->end(); ++it){
+    void initial_Declaration_Global_Variable_Array(vector<Variable_ArrayDeclarationInfo*>* gt_Var_Arr_Dec_Info_Vector) {
+        tt_Var_Arr_Dec_Info_Vector = gt_Var_Arr_Dec_Info_Vector;
+        for(auto it = tt_Var_Arr_Dec_Info_Vector->begin(); it != tt_Var_Arr_Dec_Info_Vector->end(); ++it) {
             (*it)->ms_Name = (*it)->ms_Name + "_global";
         }
         tem_DeclarationType = Dec_Global_Variable_Array;
     }
 
-    void initial_Declaration_Local_Struct(vector<string>* stspec, vector<string>* sdecs){
+    void initial_Declaration_Local_Struct(vector<string>* stspec, vector<string>* sdecs) {
         tem_DeclarationType = Dec_Local_Struct;
         tt_StructDeclarations = sdecs;
         ms_StructName = (*stspec)[stspec->size()-1];
@@ -268,10 +268,10 @@ struct Node {
         tt_StructMembers = stspec;
     }
 
-    void initial_Declaration_Global_Struct(vector<string>* stspec, vector<string>* sextvars){
+    void initial_Declaration_Global_Struct(vector<string>* stspec, vector<string>* sextvars) {
         tem_DeclarationType = Dec_Global_Struct;
         tt_StructDeclarations = sextvars;
-        for(auto it=sextvars->begin(); it!=sextvars->end(); ++it){
+        for(auto it=sextvars->begin(); it!=sextvars->end(); ++it) {
             *it += "_global";
         }
         ms_StructName = (*stspec)[stspec->size()-1];
@@ -280,25 +280,25 @@ struct Node {
     }
 
     // Statement Utils
-    void initial_Statement_Return(Node* expression){
+    void initial_Statement_Return(Node* expression) {
         tem_StatementType = Stmt_Return;
         return_Expression = expression;
     }
 
-    void initial_Statement_If(Node* expression, Node* then_statement){
+    void initial_Statement_if (Node* expression, Node* then_statement) {
         tem_StatementType = Stmt_If;
         if_Expression = expression;
         then_Statement = then_statement;
     }
 
-    void initial_Statement_IfElse(Node* expression, Node* then_statement, Node* else_statement){
+    void initial_Statement_IfElse(Node* expression, Node* then_statement, Node* else_statement) {
         tem_StatementType = Stmt_IfElse;
         if_Expression = expression;
         then_Statement = then_statement;
         else_Statement = else_statement;
     }
 
-    void initial_Statement_For(Node* expression1, Node* expression2, Node* expression3, Node* statement){
+    void initial_Statement_For(Node* expression1, Node* expression2, Node* expression3, Node* statement) {
         tem_StatementType = Stmt_For;
         init_Expression = expression1;
         cond_Expression = expression2;
@@ -306,14 +306,14 @@ struct Node {
         for_Statement = statement;
     }
 
-    void initial_Statement_StmtBlock(vector<Node*>* declarations, vector<Node*>* statements){
+    void initial_Statement_StmtBlock(vector<Node*>* declarations, vector<Node*>* statements) {
         tem_StatementType = Stmt_StatementBlock;
         declarations_in_block = declarations;
         statements_in_block = statements;
     }
 
-    void initial_Function(vector<string>* paras, Node* body){
-        if((*paras)[paras->size()-1]!="main") ms_Name = (*paras)[paras->size()-1] + "_global";
+    void initial_Function(vector<string>* paras, Node* body) {
+        if ((*paras)[paras->size()-1]!="main") ms_Name = (*paras)[paras->size()-1] + "_global";
         else ms_Name = (*paras)[paras->size()-1];
         paras->pop_back();
         parameters = paras;

@@ -51,11 +51,11 @@ struct StructType{
     map<string, int> Struct_Offsites;
     vector<string> Struct_List;
 
-    int size(){
+    int size() {
         return Struct_Offsites.size();
     }
 
-    int count(string str){
+    int count(string str) {
         return Struct_Offsites.count(str);
     }
 };
@@ -67,20 +67,20 @@ struct SymbolTable{
     map<string, StructType*> struct_map;
     vector<SymbolTable*> sub_symbol_tables;
 
-    int count(string str){
+    int count(string str) {
         return symbol_map.count(str);
     }
     
-    int countStruct(string str){
+    int countStruct(string str) {
         return struct_map.count(str);
     }
 
-    Definition* getItem(string str){
+    Definition* getItem(string str) {
         return symbol_map[str];
     }
     
-    SymbolTable(){};
-    ~SymbolTable(){};
+    SymbolTable() {};
+    ~SymbolTable() {};
 };
 
 #endif

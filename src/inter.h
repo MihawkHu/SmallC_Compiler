@@ -46,14 +46,14 @@ struct Intermediate {
     vector<int> Local_Array_Initial_Values;
     int Local_Struct_Size;
 
-    Intermediate(){}
-    ~Intermediate(){}
-    void initial_define_global_array(string name, int initial_size, vector<int>& initial_values){
+    Intermediate() {}
+    ~Intermediate() {}
+    void initial_define_global_array(string name, int initial_size, vector<int>& initial_values) {
         type = inter_global_array;
         Name = name;
         
         Global_Array_Size = 4 * initial_size;
-        for(int i=0; i<initial_values.size(); ++i){
+        for(int i=0; i<initial_values.size(); ++i) {
             Global_Array_Initial_Values.push_back(initial_values[i]);
         }
         cout << "Global_Array: " << Name << " Size: " << Global_Array_Size << " Initial List: ";
@@ -62,12 +62,12 @@ struct Intermediate {
         cout << endl;
     }
 
-    void initial_define_local_array(string name, int initial_size, int offsite, vector<int>& initial_values){
+    void initial_define_local_array(string name, int initial_size, int offsite, vector<int>& initial_values) {
         type = inter_local_array;
         Name = name;
         Local_Array_Size = 4 * initial_size;
         Local_Offsite = offsite;
-        for(int i=0; i<initial_values.size(); ++i){
+        for(int i=0; i<initial_values.size(); ++i) {
             Local_Array_Initial_Values.push_back(initial_values[i]);
         }
         cout << "Local_Array: " << Name << " Size: " << Local_Array_Size << " Offsite: " << Local_Offsite << " Initial List: ";
@@ -75,14 +75,14 @@ struct Intermediate {
         cout << endl;
     }
 
-    void initial_define_global_struct(string name, int initial_size){
+    void initial_define_global_struct(string name, int initial_size) {
         type = inter_global_struct;
         Name = name;
         Global_Struct_Size = 4 * initial_size;
         cout << "Global_Struct: " << Name << " Size: " << Global_Struct_Size << endl;
     }
 
-    void initial_define_local_struct(string name, int offsite, int initial_size){
+    void initial_define_local_struct(string name, int offsite, int initial_size) {
         type = inter_local_struct;
         Name = name;
         Local_Offsite = offsite;
@@ -90,14 +90,14 @@ struct Intermediate {
         cout << "Global_Struct: " << Name << " Size: " << Global_Struct_Size << " Offsite: " << Local_Offsite << endl;
     }
 
-    void initial_define_global_int(string name, int value){
+    void initial_define_global_int(string name, int value) {
         type = inter_global_int;
         Name = name;
         Global_Int_Initial_Value = value;
         cout << "Global_Int: " << Name << " Initial Value: " << Global_Int_Initial_Value << endl;
     }
 
-    void initial_define_local_int(string name, int offsite){
+    void initial_define_local_int(string name, int offsite) {
         type = inter_local_int;
         Name = name;
         Local_Offsite = offsite;

@@ -2,7 +2,7 @@
   File:     smallc.l
   Author:   Hu Hu
   Function: lexical analysis file for the small-C complier. Read the input file
-            and analze the lexical part. This file includes some fundamental key 
+            and analyze the lexical part. This file includes some fundamental key 
             words such as int and if, return corresponding symbol in syntax tree.
             Also, this file includes some extra key words such as comment. The 
             variable "linecount" is a global variable of this complier, which is 
@@ -100,6 +100,6 @@ for { return FOR;}
 "//"(.)*  { }
 %%
 
-void updatePosition(){
+void updatePosition() {
     yylloc.first_line = linecount;
 }

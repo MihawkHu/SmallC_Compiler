@@ -114,7 +114,7 @@ string registerStr(Register r) {
     
     replacee[R_RA] = "$ra";
     
-    if(replacee.count(r)) {
+    if (replacee.count(r)) {
         return replacee[r];
     } else {
         throw runtime_error("Unknown register: " + toString(r));
@@ -463,11 +463,11 @@ ArrayInitGlobal::~ArrayInitGlobal() {}
 ostream& ArrayInitGlobal::output(ostream& output) const {
     int size_new = size;
     std::string cur = "\t.data\n" + name + ":\n";
-    for(auto it=array_init_list.begin(); it!=array_init_list.end(); ++it){
+    for(auto it=array_init_list.begin(); it!=array_init_list.end(); ++it) {
         cur += ("\t.word "+ toString(*it) + "\n");
         size_new -= 4;
     }
-    if(size_new!=0){
+    if (size_new!=0) {
         cur += ("\t.space " + toString(size_new) +"\n");
     }
     cur += "\t.text";

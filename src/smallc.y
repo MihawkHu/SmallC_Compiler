@@ -46,18 +46,18 @@
 %union {
     int mI_Int;
     std::string* mS_Id;
-    std::vector<Node*>* mV_NodeVector;
+    std::vector<Node*>* gt_NodeVector;
     Node* node;
-    struct Variable_ArrayDeclarationInfo* mV_Var_Arr_Dec_Info;
-    std::vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector;
-    std::vector<std::string>* mV_StringVector;
+    struct Variable_ArrayDeclarationInfo* gt_Var_Arr_Dec_Info;
+    std::vector<Variable_ArrayDeclarationInfo*>* gt_Var_Arr_Dec_Info_Vector;
+    std::vector<std::string>* gt_StringVector;
 }
 
 %type <node> EXPS EXP EXTDEF STMT STMTBLOCK PROGRAM
-%type <mV_NodeVector> ARRS ARGS INIT DEFS EXTDEFS STMTS
-%type <mV_Var_Arr_Dec_Info> VAR
-%type <mV_Var_Arr_Dec_Info_Vector> DECS EXTVARS
-%type <mV_StringVector> SDEFS SDECS STSPEC SEXTVARS FUNC PARAS
+%type <gt_NodeVector> ARRS ARGS INIT DEFS EXTDEFS STMTS
+%type <gt_Var_Arr_Dec_Info> VAR
+%type <gt_Var_Arr_Dec_Info_Vector> DECS EXTVARS
+%type <gt_StringVector> SDEFS SDECS STSPEC SEXTVARS FUNC PARAS
 
 %token <mI_Int> INT
 %token <mS_Id> ID
@@ -218,7 +218,7 @@ STMT:       EXP SEMI {
             }
             | IF LP EXP RP STMT %prec LOWER_THAN_ELSE {
                 $$ = new Node(@$.first_line, Statement);
-                $$->initial_Statement_If($3, $5);
+                $$->initial_Statement_if ($3, $5);
             }
             | IF LP EXP RP STMT ELSE STMT {
                 $$ = new Node(@$.first_line, Statement);
@@ -514,7 +514,7 @@ ARGS:       ARGS COMMA EXP {
             }
             | EXP {
                 $$ = new vector<Node*>();
-                if($1!=NULL)$$->push_back($1);
+                if ($1!=NULL)$$->push_back($1);
             }
             ;
 %%
