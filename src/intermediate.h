@@ -1,8 +1,11 @@
 /*
-  File Name: intermediate.h
-  This file is the header file of intermediate.cpp
+  File:     intermediate.h
+  Author:   Hu Hu
+  Function: This file is the header file of intermediate.h. I declare the 
+            functions here, which are used to operate symbol table and do 
+            semantic checking.
+  Output:   intermediate.o
 */
-
 #ifndef INTERMEDIATE_H
 #define INTERMEDIATE_H
 

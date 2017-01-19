@@ -1,23 +1,26 @@
 /*
-  File Name: smallc.l
-  Destination OutputFile: lex.yy.c
-  This program is the source file of the lexical analyzer for SMALLC.
-  It can be compiled and run alone if you delete the omit symbols
-  that wrap the print languages.
-  More often, it is used together with smallc.y to build a syntax 
-  analyzer and return the tokens to the syntax analyzer.
+  File:     smallc.l
+  Author:   Hu Hu
+  Function: lexical analysis file for the small-C complier. Read the input file
+            and analze the lexical part. This file includes some fundamental key 
+            words such as int and if, return corresponding symbol in syntax tree.
+            Also, this file includes some extra key words such as comment. The 
+            variable "linecount" is a global variable of this complier, which is 
+            the present of the input program line. Rather than standrand IO 
+            functions, I used write() and read() to do IO operation. Use lex to 
+            complie this file.
+  Output:   lex.yy.o
 */
 %{
     #include "smallc.tab.h"
     #include <cstdio>
     #include <cstdlib>
-
+    
+    int linecount = 1;
+    void updatePosition();
     extern "C" {
         int yylex(void);
     }
-
-    int linecount = 1;
-    void updatePosition();
 %}
 
 %x comment

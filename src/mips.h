@@ -1,9 +1,10 @@
 /*
-  File Name: mips.h
-  This is the header file of mips.cpp. For detailed information, see
-  "mips.cpp"
+  File:     mips.h
+  Author:   Hu Hu
+  Function: This file is the header file for mips.cpp. I defined the registers 
+            of MIPS code and the instruction class here.
+  Output:   mips.o
 */
-
 #ifndef MIPS_H
 #define MIPS_H
 

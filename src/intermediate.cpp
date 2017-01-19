@@ -1,11 +1,14 @@
 /*
-  File Name: intermediate.cpp
-  This file is the core file of semantic checking, generating intermediate
-  code and also generating the final MIPS code! The "check" function will
-  be used to the entrance of each Node and judge which function it will 
-  further jump into. It will first get the program node from parser and 
-  return the generated intermediate code and target code to the main 
-  program.
+  File:     intermediate.cpp
+  Author:   Hu Hu
+  Function: This file is the core file of the intermediate code genration, which
+            also includes the semantic analysis part. The intermediate code that
+            I designed is much similar to the MIPS code, so it's convient for me 
+            to genrate MIPS code. 
+            The check() function in this file is the entrance of the senmantic 
+            checking. I implemented many senmantic checking items. And I will 
+            illustrate it clear in the my report.
+  Output:   intermediate.o
 */
 #include "intermediate.h"
 

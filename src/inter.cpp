@@ -1,13 +1,14 @@
 /*
-  File Name: inter.cpp
-  This file is more like a utility file rather than doing real works. This
-  file is all implemented via the method of "class", mainly to make it 
-  easier to print the intermediate code to anywhere you want, like stdio 
-  and into files. Most of the instructions are in three address forms. 
-  And there operator "<<" have been reimplemented to print their specific
-  three-address code information.
+  File:     inter.cpp
+  Author:   Hu Hu
+  Function: This file is a utility file of the intermediate code generation, 
+            which is all implemented by the method of class. It mainly to make
+            it more convenient to output the intermediate code. In this file, I
+            overloading some IO function of the class I wrote in other files. 
+            That is to say, I can use standrand operation "<<" to output three
+            address intermediate code.
+  Output:   inter.o
 */
-
 #include "inter.h"
 #include <string>
 #include <vector>

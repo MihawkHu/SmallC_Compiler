@@ -1,20 +1,16 @@
 /*
-  File Name: smallc.y
-  The entrance of the program is implemented here!
-  Destination OutputFile: smallc.tab.c smallc.tab.h smallc.output
-  This program is the source file for the syntax analyzer. And you must 
-  use it together with smallc.l, which generates the lexical analyzer to
-  analyzer the input file, otherwise it won't work.
-  You can use it with any number of parameters when executing it.
-  The parameters are the names of the files to be parsed.
-  If the file does not exist, it will send an error message and continue
-  to parse the next file.
-  If you do not enter extra parameters, you can input the to-be-parsed
-  file directly to the terminal, whereas strongly not recommanded.
-  Since our first project is very simple and can only find the very first
-  syntax error, the remaining not parsed lexemes(if you use "copy" command
-  to paste the code into the terminal) will still appear on the terminal 
-  even if the program ends, which will lead to a huge chaos.
+  File:     smallc.y
+  Author:   Hu Hu
+  Function: This file is the core file of this small-C complier. The main() 
+            function in this file is the entrance of this complier. In the main()
+            function, there are the clear process of the complier, which includes
+            the lexical analysis, syntax analysis, semantic checking, intermediate
+            code generation, mips code generation. 
+            This file mainly does the syntax analysis. It recieve the result of 
+            lexical analysis and generate syntax tree of the input program. In 
+            the syntax analysis part, I wrote it based on the grammar given in 
+            in the instruction, and solved the conflicts.
+  Output:   smallc.tab.c, smallc.tab.h, smallc.output
 */
 %code requires{
     #include "node.h"
@@ -23,18 +19,16 @@
     #include "mips.h"
 }
 %{
-    extern "C"{
-        void yyerror(const char *s);
-        extern int yylex(void);
-    }
-
     #include <fstream>
     #include <stdio.h>
     #include <string>
     #include <vector>
     using namespace std;
     
-    
+    extern "C"{
+        void yyerror(const char *s);
+        extern int yylex(void);
+    }
     extern int linecount;
     extern char* yytext;
 

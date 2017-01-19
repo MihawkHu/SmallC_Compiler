@@ -1,10 +1,12 @@
 /*
-  File Name: mips.cpp
-  This is the file where all the MIPS instructions are implemented.
-  It is also implemented via class, which looks like the "inter.cpp" 
-  very much. You can simply push the instructions in a vector and print 
-  them to anywhere you wang one by one. It is implemented in the way of 
-  "class", and the ostream has been reimplemented.
+  File:     mips.cpp
+  Author:   Hu Hu
+  Function: This file is the core function of the MIPS code generation. I 
+            implemented it by class, you can refer it in inter.cpp. Due to the 
+            intermediate code that I designed is much similar to MIPS code, so
+            it is convenient for me to generate MPIS code. I only do some 
+            transform work here.
+  Output:   mips.o
 */
 #include "mips.h"
 #include <string>

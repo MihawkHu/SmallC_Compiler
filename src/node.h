@@ -1,10 +1,10 @@
 /*
-  File Name: node.h
-  This file is the file of the Type Node implementation, the variables 
-  and functions used to generate a parse tree, which are used by the 
-  parser are all presented here.
+  File:     node.h
+  Author:   Hu Hu
+  Function: This file defined the node in the syntax tree of the input program.
+            I used enum variable to set the type of each node.
+  Output:   none
 */
-
 #ifndef NODE_H
 #define NODE_H
 

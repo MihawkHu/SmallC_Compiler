@@ -1,14 +1,11 @@
 /*
-  File Name: inter.h
-  This file is the header file of inter.cpp. The former part is 
-  deprecated since it is too complicated to initialize and print a 
-  three-address code using this method, and will cost a lot of extra 
-  instructions to generate the code in "intermediate.cpp". The 
-  reason why I still leave it here without noting it is because it 
-  may be used somewhere in the program that once I delete it, errors
-  will occur.
+  File:     inter.h
+  Author:   Hu Hu
+  Function: This file is the header file of inter.cpp. In this file, I defined 
+            the class of intermediate code. Which makes it more convenient to 
+            output the three address intermediate code.
+  Output:   inter.o
 */
-
 #ifndef INTER_H
 #define INTER_H
 
@@ -452,28 +449,5 @@ public:
     virtual const CallWrite& operator=(const CallWrite&) = delete;
     virtual std::ostream& output(std::ostream& o) const;
 };
-// class InterArray : public Inter{
-// private:
-//     std::string name;
-//     std::string offset;
-// public:
-//     InterArray(std::string name, std::string offset);
-//     InterArray(const InterArray&) = delete;
-//     virtual ~InterArray();
-//     virtual const InterArray& operator=(const InterArray&) = delete;
-//     virtual std::ostream& output(std::ostream& o) const;
-// };
-
-// class InterStructMember : public Inter{
-// private:
-//     std::string name;
-//     std::string member;
-// public:
-//     InterStructMember(std::string name, std::string member);
-//     InterStructMember(const InterStructMember&) = delete;
-//     virtual ~InterStructMember();
-//     virtual const InterStructMember& operator=(const InterStructMember&) = delete;
-//     virtual std::ostream& output(std::ostream& o) const;
-// };
 
 #endif
