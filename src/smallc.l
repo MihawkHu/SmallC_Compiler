@@ -1,135 +1,112 @@
-/*
-
-*/
 %{
-    #include <cstdio>
-    #include <cstdlib>
-    #include "y.tab.h"
-    #include "parseTree.h"
-    
-    int linecount = 1;
+
+////////////////////////////////////////////////////////////////////////
+/*
+  File Name: smallc.l
+  Destination OutputFile: lex.yy.c
+  This program is the source file of the lexical analyzer for SMALLC.
+  It can be compiled and run alone if you delete the omit symbols
+  that wrap the print languages.
+  More often, it is used together with smallc.y to build a syntax 
+  analyzer and return the tokens to the syntax analyzer.
+*/
+////////////////////////////////////////////////////////////////////////
+
+/*#include "main.hpp"*/
+#include "smallc.tab.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+extern "C"
+{
+	// int yywrap(void);
+	int yylex(void);
+}
+
+void updatePosition();
+#define YY_USER_ACTION updatePosition();
+int linecount = 1; // line count
 %}
-digit [0-9]
-digits {digit}+
-number {digits}|(0(x|X)[0-9a-fA-F]+)|(0[0-7]+)
-int  -{number}|{number}
-id [a-zA-Z_][a-zA-Z0-9_]*
-semi ";"
-comma ","
 
-type int
-lp "("
-rp ")"
-lb "["
-rb "]"
-lc "{"
-rc "}"
-struct struct
-return return 
-if if
-else else 
-break break
-cont continue
-for for
+%x comment
 
-dot "."
-minus "-"
-not "!"
-plusOne "++"
-minusOne "--"
-reverse "~"
-multi "*"
-div "/"
-mod "%"
-plus "+"
-shiftLeft "<<"
-shiftRight ">>"
-greatThan ">"
-notLessThan ">="
-lessThan "<"
-notGreatThan "<="
-equal "=="
-notEqual "！="
-biAnd "&"
-biXor "^"
-biOr "|"
-logAnd "&&"
-logOr "||"
-
-assignEqual "="
-assignPlus "+="
-assignMinus "-="
-assignMulti "*="
-assignDiv "/="
-assignAnd "&="
-assignXor "^="
-assignOr "|="
-assignSHL "<<="
-assignSHR ">>="
-
-read read
-write write
-whiteSpace [ \t\v\r\f]+
-newline [\n]
+%option noyywrap
+%option yylineno
+%option nounput
 
 %%
-{int} {yylval.string = strdup(yytext); return INT;}
-{semi} {yylval.string = strdup(yytext); return SEMI;}
-{comma} {yylval.string = strdup(yytext); return COMMA;}
-{type} {yylval.string = strdup(yytext); return TYPE;}
-{lp} {yylval.string = strdup(yytext); return LP;}
-{rp} {yylval.string = strdup(yytext); return RP;}
-{lb} {yylval.string = strdup(yytext); return LB;}
-{rb} {yylval.string = strdup(yytext); return RB;}
-{lc} {yylval.string = strdup(yytext); return LC;}
-{rc} {yylval.string = strdup(yytext); return RC;}
-{struct} {yylval.string = strdup(yytext); return STRUCT;}
-{return} {yylval.string = strdup(yytext); return RETURN;}
-{if} {yylval.string = strdup(yytext); return IF;}
-{else} {yylval.string = strdup(yytext); return ELSE;}
-{break} {yylval.string = strdup(yytext); return BREAK;}
-{cont} {yylval.string = strdup(yytext); return CONT;}
-{for} {yylval.string = strdup(yytext); return FOR;}
 
-{dot} {yylval.string = strdup(yytext); return DOT;}
-{minus} {yylval.string = strdup(yytext); return MINUS;}
-{not} {yylval.string = strdup(yytext); return NOT;}
-{plusOne} {yylval.string = strdup(yytext); return PLUS_ONE;}
-{minusOne} {yylval.string = strdup(yytext); return MINUS_ONE;}
-{reverse} {yylval.string = strdup(yytext); return REVERSE;}
-{multi} {yylval.string = strdup(yytext); return MULTI;}
-{div} {yylval.string = strdup(yytext); return DIV;}
-{mod} {yylval.string = strdup(yytext); return MOD;}
-{plus} {yylval.string = strdup(yytext); return PLUS;}
-{shiftLeft} {yylval.string = strdup(yytext); return SHL;}
-{shiftRight} {yylval.string = strdup(yytext); return SHR;}
-{greatThan} {yylval.string = strdup(yytext); return GREAT_THAN;}
-{notLessThan} {yylval.string = strdup(yytext); return NOT_LESS_THAN;}
-{lessThan} {yylval.string = strdup(yytext); return LESS_THAN;}
-{notGreatThan} {yylval.string = strdup(yytext); return NOT_GREAT_THAN;}
-{equal} {yylval.string = strdup(yytext); return EQUAL;}
-{notEqual} {yylval.string = strdup(yytext); return NOT_EQUAL;}
-{biAnd} {yylval.string = strdup(yytext); return BI_AND;}
-{biXor} {yylval.string = strdup(yytext); return BI_XOR;}
-{biOr} {yylval.string = strdup(yytext); return BI_OR;}
-{logAnd} {yylval.string = strdup(yytext); return LOG_AND;}
-{logOr} {yylval.string = strdup(yytext); return LOG_OR;}
+"/*"      BEGIN(comment);
+<comment>{
+[^*\n]*        /* eat anything that's not a '*' */
+"*"+[^*/\n]*   /* eat up '*'s not followed by '/'s */
+\n             
+"*"+"/"        BEGIN(INITIAL);
+}
 
-{assignEqual} {yylval.string = strdup(yytext); return ASSIGN_EQUAL;}
-{assignPlus} {yylval.string = strdup(yytext); return ASSIGN_PLUS;}
-{assignMinus} {yylval.string = strdup(yytext); return ASSIGN_MINUS;}
-{assignMulti} {yylval.string = strdup(yytext); return ASSIGN_MULTI;}
-{assignDiv} {yylval.string = strdup(yytext); return ASSIGN_DIV;}
-{assignAnd} {yylval.string = strdup(yytext); return ASSIGN_AND;}
-{assignXor} {yylval.string = strdup(yytext); return ASSIGN_XOR;}
-{assignOr} {yylval.string = strdup(yytext); return ASSIGN_OR;}
-{assignSHL} {yylval.string = strdup(yytext); return ASSIGN_SHL;}
-{assignSHR} {yylval.string = strdup(yytext); return ASSIGN_SHR;}
-{read} {yylval.string = strdup(yytext); return READ;}
-{write} {yylval.string = strdup(yytext); return WRITE;}
-{id} {yylval.string = strdup(yytext); return ID;}
-{whiteSpace} {;}
-{newline} {linecount++;}
+
+0[0-7]*		{ yylval.mI_Int = strtoul(yytext, NULL, 0); /*printf("INT ");*/ return INT;}
+[1-9][0-9]*	{ /*yylval = atoi(yytext);*/ /*printf("INT ");*/ yylval.mI_Int =  atoi(yytext); return INT;}
+0[Xx][0-9a-fA-F]+	{ yylval.mI_Int = strtoul(yytext, NULL, 0); /*printf("INT ");*/ return INT;}
+";"			{ /*printf("SEMI ");*/ return SEMI;}
+","			{ /*printf("COMMA ");*/ return COMMA;}
+"."			{ /*printf("DOT ");*/ return DOT;}
+"-"			{ /*printf("MINUS ");*/ return MINUS;}
+"!"			{ /*printf("LOGICALNOT ");*/ return LOGICALNOT;}
+"++"			{ /*printf("PREINC ");*/ return PREINC;}
+"--"			{ /*printf("PREDEC ");*/ return PREDEC;}
+"~"			{ /*printf("BINARYNOT ");*/ return BITNOT;}
+"*"			{ /*printf("MUL ");*/ return MUL;}
+"/"			{ /*printf("DIV ");*/ return DIV;}
+"%"			{ /*printf("MOD ");*/ return MOD;}
+"+"			{ /*printf("PLUS ");*/ return PLUS;}
+"<<"			{ /*printf("SHL ");*/ return SHL;}
+">>"			{ /*printf("SHR ");*/ return SHR;}
+">"			{ /*printf("GT ");*/ return GT;}
+">="			{ /*printf("GE ");*/ return GE;}
+"<"			{ /*printf("LT ");*/ return LT;}
+"<="			{ /*printf("LE ");*/ return LE;}
+"=="			{ /*printf("ET ");*/ return ET;}
+"!="			{ /*printf("NET ");*/ return NET;}
+"&"			{ /*printf("BITAND ");*/ return BITAND;}
+"^"			{ /*printf("BITXOR ");*/ return BITXOR;}
+"|"			{ /*printf("BITOR ");*/ return BITOR;}
+"&&"			{ /*printf("LOGICALAND ");*/ return LOGICALAND;}
+"||"			{ /*printf("LOGICALOR ");*/ return LOGICALOR;}
+"="			{ /*printf("ASSIGN ");*/ return ASSIGN;}
+"+="			{ /*printf("PLUSASSIGN ");*/ return PLUSASSIGN;}
+"-="			{ /*printf("MINUSASSIGN ");*/ return MINUSASSIGN;}
+"*="			{ /*printf("MULASSIGN ");*/ return MULASSIGN;}
+"/="			{ /*printf("DIVASSIGN ");*/ return DIVASSIGN;}
+"&="			{ /*printf("ANDASSIGN ");*/ return ANDASSIGN;}
+"^="			{ /*printf("XORASSIGN ");*/ return XORASSIGN;}
+"|="			{ /*printf("ORASSIGN ");*/ return ORASSIGN;}
+"<<="			{ /*printf("SHLASSIGN ");*/ return SHLASSIGN;}
+">>="			{ /*printf("SHRASSIGN ");*/ return SHRASSIGN;}
+int			{ /*printf("TYPE ");*/ return TYPE;}
+"("			{ /*printf("LP ");*/ return LP;}
+")"			{ /*printf("RP ");*/ return RP;}
+"["			{ /*printf("LB ");*/ return LB;}
+"]"			{ /*printf("RB ");*/ return RB;}
+"{"			{ /*printf("LC ");*/ return LC;}
+"}"			{ /*printf("RC ");*/ return RC;}
+struct			{ /*printf("STRUCT ");*/ return STRUCT;}
+return			{ /*printf("RETURN ");*/ return RETURN;}
+read    {return READ;}
+write   {return WRITE;}
+if			{ /*printf("IF ");*/ return IF;}
+else			{ /*printf("ELSE ");*/ return ELSE;}
+break			{ /*printf("BREAK ");*/ return BREAK;}
+continue		{ /*printf("CONT ");*/ return CONT;}
+for			{ /*printf("FOR ");*/ return FOR;}
+[a-zA-Z_][a-zA-Z_0-9]*	{ /*printf("ID ");*/ yylval.mS_Id = new std::string(yytext); return ID;}
+[\n]			{ ++linecount; /*printf("\n%d: ",linecount);*/}
+[ \t]
+"//"(.)*  { /* comment */ }
 %%
 
 
+
+void updatePosition(){
+	yylloc.first_line = linecount;
+}
