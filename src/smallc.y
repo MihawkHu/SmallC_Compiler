@@ -35,8 +35,8 @@
     using namespace std;
     
     
-    extern int linecount; // get the linecount
-    extern char* yytext;  // get the token, used for yyerror()
+    extern int linecount;
+    extern char* yytext;
 
     struct Node;
     struct SymbolTable;
@@ -44,15 +44,11 @@
     class Instruction;
     class Inter;
     
-    /*#ifndef PROGRAM_GLOBAL*/
-    /*#define PROGRAM_GLOBAL*/
     Node* root;
     SymbolTable* symbol_table;
     vector<Inter*>* inters;
     vector<Instruction*>* instrs;
-    /*#endif*/
 %}
-/*%locations*/
 %union {
     int mI_Int;
     std::string* mS_Id;
@@ -146,22 +142,22 @@ SEXTVARS:   ID {
             ;
 EXTVARS: VAR {
                 $$ = new vector<Variable_ArrayDeclarationInfo*>();
-                $1->mv_InitList = new vector<Node*>();
+                $1->tt_InitList = new vector<Node*>();
                 $$->push_back($1);
             }
             | VAR ASSIGN INIT {
                 $$ = new vector<Variable_ArrayDeclarationInfo*>();
-                $1->mv_InitList = $3;
+                $1->tt_InitList = $3;
                 $$->push_back($1);
             }
             | EXTVARS COMMA VAR {
                 $$ = $1;
-                $3->mv_InitList = new vector<Node*>();
+                $3->tt_InitList = new vector<Node*>();
                 $$->push_back($3);
             }
             | EXTVARS COMMA VAR ASSIGN INIT{
                 $$ = $1;
-                $3->mv_InitList = $5;
+                $3->tt_InitList = $5;
                 $$->push_back($3);
             }
             | {
@@ -240,20 +236,20 @@ STMT:       EXP SEMI {
             }
             | CONT SEMI {
                 $$ = new Node(@$.first_line, Statement);
-                $$->me_StatementType = Stmt_Continue;
+                $$->tem_StatementType = Stmt_Continue;
             }
             | BREAK SEMI {
                 $$ = new Node(@$.first_line, Statement);
-                $$->me_StatementType = Stmt_Break;
+                $$->tem_StatementType = Stmt_Break;
             }
             | READ LP EXP RP SEMI {
                 $$ = new Node(@$.first_line, Statement);
-                $$->me_StatementType = Stmt_Read;
+                $$->tem_StatementType = Stmt_Read;
                 $$->io_Expression = $3;
             }
             | WRITE LP EXP RP SEMI {
                 $$ = new Node(@$.first_line, Statement);
-                $$->me_StatementType = Stmt_Write;
+                $$->tem_StatementType = Stmt_Write;
                 $$->io_Expression = $3;
             }
             ;
@@ -297,22 +293,22 @@ SDECS:      SDECS COMMA ID {
             ;
 DECS:       VAR {
                 $$ = new vector<Variable_ArrayDeclarationInfo*>();
-                $1->mv_InitList = new vector<Node*>();
+                $1->tt_InitList = new vector<Node*>();
                 $$->push_back($1);
             }
             | DECS COMMA VAR {
                 $$ = $1;
-                $3->mv_InitList = new vector<Node*>();
+                $3->tt_InitList = new vector<Node*>();
                 $$->push_back($3);
             }
             | VAR ASSIGN INIT {
                 $$ = new vector<Variable_ArrayDeclarationInfo*>();
-                $1->mv_InitList = $3;
+                $1->tt_InitList = $3;
                 $$->push_back($1);
             }
             | DECS COMMA VAR ASSIGN INIT {
                 $$ = $1;
-                $3->mv_InitList = $5;
+                $3->tt_InitList = $5;
                 $$->push_back($3);
             }
             ;
@@ -322,7 +318,7 @@ VAR:        ID {
             }
             | VAR LB INT RB {
                 $$ = $1;
-                $$->mv_ArrayDeclarationSubscriptList.push_back($3);
+                $$->tt_ArrayDeclarationSubscriptList.push_back($3);
             }
             ;
 INIT:       EXP {
@@ -571,7 +567,10 @@ int main(int argc, char **argv)
         ffout << **it;
         delete(*it);
     }
-
+    
+    fclose(yyin);
+    fout.close();
+    ffout.close();
     return 0;
 }
 

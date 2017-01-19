@@ -1,12 +1,10 @@
-////////////////////////////////////////////////////////////////////////
 /*
   File Name: intermediate.h
   This file is the header file of intermediate.cpp
 */
-////////////////////////////////////////////////////////////////////////
 
-#ifndef GEN_INTERMEDIATE_H
-#define GEN_INTERMEDIATE_H
+#ifndef INTERMEDIATE_H
+#define INTERMEDIATE_H
 
 #include "node.h"
 #include "SymbolTable.h"
@@ -28,68 +26,41 @@ extern string currentLoopBreakLabel;
 extern int stackSize;
 
 SymbolTable* pushScope(SymbolTable* table);
-
 SymbolTable* popScope(SymbolTable* table);
 
 Definition* getDefinition(string name, SymbolTable* table, int linenum);
-
 Register getVarAddress(Node* cur, SymbolTable* table, int linenum);
-
 Register getStructMemberAddress(Node* cur, SymbolTable* table, int linenum);
-
 Register getArraySubscriptAddress(Node* cur, SymbolTable* table, int linenum);
 
 void reclainRegisters();
-
 void returnRegister(Register r);
-
 Register getFreeRegister();
 
 bool generate_intermediates(SymbolTable* symbol_table, vector<Inter*>* intermediates, Node* root, vector<Instruction*>* instrs);
-
 bool check(Node* cur, SymbolTable* table);
 
-bool Define_Global_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum);
+bool defineGlobal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum);
+bool defineGlobal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum);
+bool defineFunction(Node* cur, SymbolTable* table, int linenum);
+bool defineLocal_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum);
+bool defineLocal_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum);
+bool defineIf_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineIfElse_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineFor_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineBreak_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineContinue_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineReturn_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineAssign_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineUnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineInt_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineBinaryOp_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineUnaryOp_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineVariable_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineArray_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineFunctionCall_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineStructMember_Expression(Node* cur, SymbolTable* table, int linenum);
+bool defineRead_Statement(Node* cur, SymbolTable* table, int linenum);
+bool defineWrite_Statement(Node* cur, SymbolTable* table, int linenum);
 
-bool Define_Global_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum);
-
-bool Define_Function(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Local_Var_Array(Variable_ArrayDeclarationInfo* info, SymbolTable* table, int linenum);
-
-bool Define_Local_Struct(string structname, vector<string>* structMembers, vector<string>* structDeclarations, SymbolTable* table, int linenum);
-
-bool Define_If_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_IfElse_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_For_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Break_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Continue_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Return_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Assign_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_UnaryAssign_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Int_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_BinaryOp_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_UnaryOp_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Variable_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Array_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_FunctionCall_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_StructMember_Expression(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Read_Statement(Node* cur, SymbolTable* table, int linenum);
-
-bool Define_Write_Statement(Node* cur, SymbolTable* table, int linenum);
 #endif

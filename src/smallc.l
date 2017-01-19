@@ -16,16 +16,13 @@
         int yylex(void);
     }
 
-    void updatePosition();
-    #define YY_USER_ACTION updatePosition();
     int linecount = 1;
+    void updatePosition();
 %}
 
 %x comment
 
 %option noyywrap
-/*%option yylineno*/
-/*%option nounput*/
 
 %%
 "/*" BEGIN(comment);
@@ -37,8 +34,8 @@
 }
 
 0[0-7]* { yylval.mI_Int = strtoul(yytext, NULL, 0); return INT;}
-[1-9][0-9]*	{ yylval.mI_Int =  atoi(yytext); return INT;}
-0[Xx][0-9a-fA-F]+	{ yylval.mI_Int = strtoul(yytext, NULL, 0); return INT;}
+[1-9][0-9]* { yylval.mI_Int =  atoi(yytext); return INT;}
+0[Xx][0-9a-fA-F]+ { yylval.mI_Int = strtoul(yytext, NULL, 0); return INT;}
 
 ";" { return SEMI;}
 "," { return COMMA;}
