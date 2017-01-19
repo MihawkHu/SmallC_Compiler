@@ -62,66 +62,38 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 10 "smallc.y" /* yacc.c:339  */
+#line 25 "smallc.y" /* yacc.c:339  */
 
-////////////////////////////////////////////////////////////////////////
-/*
-  File Name: smallc.y
-  The entrance of the program is implemented here!
-  Destination OutputFile: smallc.tab.c smallc.tab.h smallc.output
-  This program is the source file for the syntax analyzer. And you must 
-  use it together with smallc.l, which generates the lexical analyzer to
-  analyzer the input file, otherwise it won't work.
-  You can use it with any number of parameters when executing it.
-  The parameters are the names of the files to be parsed.
-  If the file does not exist, it will send an error message and continue
-  to parse the next file.
-  If you do not enter extra parameters, you can input the to-be-parsed
-  file directly to the terminal, whereas strongly not recommanded.
-  Since our first project is very simple and can only find the very first
-  syntax error, the remaining not parsed lexemes(if you use "copy" command
-  to paste the code into the terminal) will still appear on the terminal 
-  even if the program ends, which will lead to a huge chaos.
-*/
-////////////////////////////////////////////////////////////////////////
+    extern "C"{
+        void yyerror(const char *s);
+        extern int yylex(void);
+    }
 
-/*#include "main.hpp"*/
-////////////////////////////////////////////////////////////
+    #include <fstream>
+    #include <stdio.h>
+    #include <string>
+    #include <vector>
+    using namespace std;
+    
+    
+    extern int linecount; // get the linecount
+    extern char* yytext;  // get the token, used for yyerror()
 
+    struct Node;
+    struct SymbolTable;
+    struct Intermediate;
+    class Instruction;
+    class Inter;
+    
+    /*#ifndef PROGRAM_GLOBAL*/
+    /*#define PROGRAM_GLOBAL*/
+    Node* root;
+    SymbolTable* symbol_table;
+    vector<Inter*>* inters;
+    vector<Instruction*>* instrs;
+    /*#endif*/
 
-///////////////////////////////////////////////////////////
-extern "C"{
-	void yyerror(const char *s);
-	extern int yylex(void);
-	// void yyrestart(FILE*);
-}
-
-#include <fstream>
-#include <stdio.h>
-#include <string>
-#include <vector>
-using namespace std;
-
-
-extern int linecount; // get the linecount
-extern char* yytext;  // get the token, used for yyerror()
-
-struct Node;
-struct SymbolTable;
-struct Intermediate;
-class Instruction;
-class Inter;
-
-#ifndef PROGRAM_GLOBAL
-#define PROGRAM_GLOBAL
-Node* program_out;
-SymbolTable* symbol_table;
-vector<Inter*>* inters;
-vector<Instruction*>* instrs;
-#endif
-
-
-#line 125 "smallc.tab.c" /* yacc.c:339  */
+#line 97 "smallc.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -151,15 +123,14 @@ vector<Instruction*>* instrs;
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "smallc.y" /* yacc.c:355  */
+#line 19 "smallc.y" /* yacc.c:355  */
 
-#include "node.h"
-#include "inter.h"
-#include "intermediate.h"
-#include "mips.h"
+    #include "node.h"
+    #include "inter.h"
+    #include "intermediate.h"
+    #include "mips.h"
 
-
-#line 163 "smallc.tab.c" /* yacc.c:355  */
+#line 134 "smallc.tab.c" /* yacc.c:355  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -228,17 +199,17 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 71 "smallc.y" /* yacc.c:355  */
+#line 56 "smallc.y" /* yacc.c:355  */
 
-	int mI_Int;
-	std::string* mS_Id;
-	std::vector<Node*>* mV_NodeVector;
-	Node* node;
-	struct Variable_ArrayDeclarationInfo* mV_Var_Arr_Dec_Info;
-	std::vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector;
-	std::vector<std::string>* mV_StringVector;
+    int mI_Int;
+    std::string* mS_Id;
+    std::vector<Node*>* mV_NodeVector;
+    Node* node;
+    struct Variable_ArrayDeclarationInfo* mV_Var_Arr_Dec_Info;
+    std::vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector;
+    std::vector<std::string>* mV_StringVector;
 
-#line 242 "smallc.tab.c" /* yacc.c:355  */
+#line 213 "smallc.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -267,7 +238,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 271 "smallc.tab.c" /* yacc.c:358  */
+#line 242 "smallc.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -572,16 +543,16 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   119,   119,   125,   131,   136,   143,   147,   153,   158,
-     163,   168,   173,   178,   183,   188,   193,   198,   202,   209,
-     216,   221,   226,   231,   237,   241,   246,   249,   252,   256,
-     260,   264,   268,   272,   276,   281,   288,   294,   300,   305,
-     312,   317,   322,   329,   334,   339,   344,   351,   355,   361,
-     365,   370,   371,   374,   378,   382,   386,   390,   394,   398,
-     402,   406,   410,   414,   418,   422,   426,   430,   434,   438,
-     442,   446,   450,   456,   462,   468,   474,   480,   486,   492,
-     498,   504,   508,   512,   516,   520,   524,   527,   531,   535,
-     539,   546,   550,   555,   559
+       0,   102,   102,   107,   113,   117,   124,   128,   133,   138,
+     143,   147,   152,   157,   162,   167,   171,   176,   180,   186,
+     192,   197,   202,   206,   211,   215,   219,   222,   225,   229,
+     233,   237,   241,   245,   249,   254,   260,   266,   272,   276,
+     283,   287,   292,   298,   303,   308,   313,   319,   323,   328,
+     332,   336,   339,   343,   347,   351,   355,   359,   363,   367,
+     371,   375,   379,   383,   387,   391,   395,   399,   403,   407,
+     411,   415,   419,   425,   431,   437,   443,   449,   455,   461,
+     467,   473,   477,   481,   485,   489,   493,   496,   500,   504,
+     508,   513,   517,   521,   525
 };
 #endif
 
@@ -1601,876 +1572,879 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 119 "smallc.y" /* yacc.c:1646  */
+#line 102 "smallc.y" /* yacc.c:1646  */
     {
-								program_out = new Node((yyloc).first_line, Program);
-								program_out->extern_declarations = (yyvsp[0].mV_NodeVector);
-								}
-#line 1610 "smallc.tab.c" /* yacc.c:1646  */
+                root = new Node((yyloc).first_line, Program);
+                root->extern_declarations = (yyvsp[0].mV_NodeVector);
+            }
+#line 1581 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 125 "smallc.y" /* yacc.c:1646  */
+#line 107 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
-								if((yyvsp[0].node)!=NULL){
-									(yyval.mV_NodeVector)->push_back((yyvsp[0].node));
-								}
-								}
-#line 1621 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
+                if ((yyvsp[0].node) != NULL) {
+                    (yyval.mV_NodeVector)->push_back((yyvsp[0].node));
+                }
+            }
+#line 1592 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 131 "smallc.y" /* yacc.c:1646  */
+#line 113 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = new vector<Node*>();					
-								}
-#line 1629 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+            }
+#line 1600 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 136 "smallc.y" /* yacc.c:1646  */
+#line 117 "smallc.y" /* yacc.c:1646  */
     {
-								if((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector)->size()==0) (yyval.node) = NULL;
-								else {
-									(yyval.node) = new Node((yyloc).first_line, Declaration);
-									(yyval.node)->initial_Declaration_Global_Variable_Array((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector));
-								}
-								}
-#line 1641 "smallc.tab.c" /* yacc.c:1646  */
+                if ((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector)->size() == 0) (yyval.node) = NULL;
+                else {
+                    (yyval.node) = new Node((yyloc).first_line, Declaration);
+                    (yyval.node)->initial_Declaration_Global_Variable_Array((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector));
+                }
+            }
+#line 1612 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 143 "smallc.y" /* yacc.c:1646  */
+#line 124 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Declaration);
- 								(yyval.node)->initial_Declaration_Global_Struct((yyvsp[-2].mV_StringVector), (yyvsp[-1].mV_StringVector));
- 								}
-#line 1650 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Declaration);
+                (yyval.node)->initial_Declaration_Global_Struct((yyvsp[-2].mV_StringVector), (yyvsp[-1].mV_StringVector));
+            }
+#line 1621 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 147 "smallc.y" /* yacc.c:1646  */
+#line 128 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Function);
- 								(yyval.node)->initial_Function((yyvsp[-1].mV_StringVector), (yyvsp[0].node));
- 								}
-#line 1659 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Function);
+                (yyval.node)->initial_Function((yyvsp[-1].mV_StringVector), (yyvsp[0].node));
+            }
+#line 1630 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 153 "smallc.y" /* yacc.c:1646  */
+#line 133 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = new vector<string>();
-								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
-								delete (yyvsp[0].mS_Id);
-								}
-#line 1669 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1640 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 158 "smallc.y" /* yacc.c:1646  */
+#line 138 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = (yyvsp[-2].mV_StringVector);
- 								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
- 								delete (yyvsp[0].mS_Id);
- 								}
-#line 1679 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-2].mV_StringVector);
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1650 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 163 "smallc.y" /* yacc.c:1646  */
+#line 143 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = new vector<string>();
-								}
-#line 1687 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+            }
+#line 1658 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 168 "smallc.y" /* yacc.c:1646  */
+#line 147 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
-								(yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
-								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
-								}
-#line 1697 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
+                (yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
+            }
+#line 1668 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 173 "smallc.y" /* yacc.c:1646  */
+#line 152 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
-								(yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
-								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
-								}
-#line 1707 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
+                (yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
+            }
+#line 1678 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 178 "smallc.y" /* yacc.c:1646  */
+#line 157 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-2].mV_Var_Arr_Dec_Info_Vector);
- 								(yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
- 								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
-								}
-#line 1717 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-2].mV_Var_Arr_Dec_Info_Vector);
+                (yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
+            }
+#line 1688 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 183 "smallc.y" /* yacc.c:1646  */
+#line 162 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-4].mV_Var_Arr_Dec_Info_Vector);
- 								(yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
- 								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
-								}
-#line 1727 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-4].mV_Var_Arr_Dec_Info_Vector);
+                (yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
+            }
+#line 1698 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 188 "smallc.y" /* yacc.c:1646  */
+#line 167 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
-							    }
-#line 1735 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
+            }
+#line 1706 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 193 "smallc.y" /* yacc.c:1646  */
+#line 171 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
-								(yyval.mV_StringVector)->push_back(*(yyvsp[-3].mS_Id));
-								delete (yyvsp[-3].mS_Id);
-								}
-#line 1745 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
+                (yyval.mV_StringVector)->push_back(*(yyvsp[-3].mS_Id));
+                delete (yyvsp[-3].mS_Id);
+            }
+#line 1716 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 198 "smallc.y" /* yacc.c:1646  */
+#line 176 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
- 								(yyval.mV_StringVector)->push_back("#");
- 								}
-#line 1754 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
+                (yyval.mV_StringVector)->push_back("#");
+            }
+#line 1725 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 202 "smallc.y" /* yacc.c:1646  */
+#line 180 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = new vector<string>();
- 								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
- 								delete (yyvsp[0].mS_Id);
- 								}
-#line 1764 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1735 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 209 "smallc.y" /* yacc.c:1646  */
+#line 186 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
-								(yyval.mV_StringVector)->push_back(*(yyvsp[-3].mS_Id));
-								delete (yyvsp[-3].mS_Id);
-								}
-#line 1774 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-1].mV_StringVector);
+                (yyval.mV_StringVector)->push_back(*(yyvsp[-3].mS_Id));
+                delete (yyvsp[-3].mS_Id);
+            }
+#line 1745 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 216 "smallc.y" /* yacc.c:1646  */
+#line 192 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = (yyvsp[-3].mV_StringVector);
-								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
-								delete (yyvsp[0].mS_Id);
-								}
-#line 1784 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-3].mV_StringVector);
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1755 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 221 "smallc.y" /* yacc.c:1646  */
+#line 197 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = new vector<string>();
- 								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
- 								delete (yyvsp[0].mS_Id);
- 								}
-#line 1794 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1765 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 226 "smallc.y" /* yacc.c:1646  */
+#line 202 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = new vector<string>();
- 								}
-#line 1802 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+            }
+#line 1773 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 231 "smallc.y" /* yacc.c:1646  */
+#line 206 "smallc.y" /* yacc.c:1646  */
     {
-											(yyval.node) = new Node((yyloc).first_line, Statement);
-											(yyval.node)->initial_Statement_StmtBlock((yyvsp[-2].mV_NodeVector), (yyvsp[-1].mV_NodeVector));
-											}
-#line 1811 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->initial_Statement_StmtBlock((yyvsp[-2].mV_NodeVector), (yyvsp[-1].mV_NodeVector));
+            }
+#line 1782 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 237 "smallc.y" /* yacc.c:1646  */
+#line 211 "smallc.y" /* yacc.c:1646  */
     {
-											(yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
-											(yyval.mV_NodeVector)->push_back((yyvsp[0].node));
-											}
-#line 1820 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
+                (yyval.mV_NodeVector)->push_back((yyvsp[0].node));
+            }
+#line 1791 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 241 "smallc.y" /* yacc.c:1646  */
+#line 215 "smallc.y" /* yacc.c:1646  */
     {
-											(yyval.mV_NodeVector) = new vector<Node*>();
-											}
-#line 1828 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+            }
+#line 1799 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 246 "smallc.y" /* yacc.c:1646  */
+#line 219 "smallc.y" /* yacc.c:1646  */
     {
-											(yyval.node) = (yyvsp[-1].node);
-											}
-#line 1836 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = (yyvsp[-1].node);
+            }
+#line 1807 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 249 "smallc.y" /* yacc.c:1646  */
+#line 222 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = (yyvsp[0].node);
- 											}
-#line 1844 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = (yyvsp[0].node);
+            }
+#line 1815 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 252 "smallc.y" /* yacc.c:1646  */
+#line 225 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->initial_Statement_Return((yyvsp[-1].node));
- 											}
-#line 1853 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->initial_Statement_Return((yyvsp[-1].node));
+            }
+#line 1824 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 256 "smallc.y" /* yacc.c:1646  */
+#line 229 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->initial_Statement_If((yyvsp[-2].node), (yyvsp[0].node));
- 											}
-#line 1862 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->initial_Statement_If((yyvsp[-2].node), (yyvsp[0].node));
+            }
+#line 1833 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 260 "smallc.y" /* yacc.c:1646  */
+#line 233 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->initial_Statement_IfElse((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node));
- 											}
-#line 1871 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->initial_Statement_IfElse((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node));
+            }
+#line 1842 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 264 "smallc.y" /* yacc.c:1646  */
+#line 237 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->initial_Statement_For((yyvsp[-6].node), (yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node));
- 											}
-#line 1880 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->initial_Statement_For((yyvsp[-6].node), (yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node));
+            }
+#line 1851 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 268 "smallc.y" /* yacc.c:1646  */
+#line 241 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->me_StatementType = Stmt_Continue;
- 											}
-#line 1889 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->me_StatementType = Stmt_Continue;
+            }
+#line 1860 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 272 "smallc.y" /* yacc.c:1646  */
+#line 245 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->me_StatementType = Stmt_Break;
- 											}
-#line 1898 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->me_StatementType = Stmt_Break;
+            }
+#line 1869 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 276 "smallc.y" /* yacc.c:1646  */
+#line 249 "smallc.y" /* yacc.c:1646  */
     {
- 											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->me_StatementType = Stmt_Read;
- 											(yyval.node)->io_Expression = (yyvsp[-2].node);
- 											}
-#line 1908 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->me_StatementType = Stmt_Read;
+                (yyval.node)->io_Expression = (yyvsp[-2].node);
+            }
+#line 1879 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 281 "smallc.y" /* yacc.c:1646  */
+#line 254 "smallc.y" /* yacc.c:1646  */
     {
-											(yyval.node) = new Node((yyloc).first_line, Statement);
- 											(yyval.node)->me_StatementType = Stmt_Write;
- 											(yyval.node)->io_Expression = (yyvsp[-2].node);
- 											}
-#line 1918 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Statement);
+                (yyval.node)->me_StatementType = Stmt_Write;
+                (yyval.node)->io_Expression = (yyvsp[-2].node);
+            }
+#line 1889 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 288 "smallc.y" /* yacc.c:1646  */
+#line 260 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
-								Node* temp = new Node((yylsp[-2]).first_line,Declaration);
-								temp->initial_Declaration_Local_Variable_Array((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector));
-								(yyval.mV_NodeVector)->push_back(temp);
-								}
-#line 1929 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
+                Node* temp = new Node((yylsp[-2]).first_line,Declaration);
+                temp->initial_Declaration_Local_Variable_Array((yyvsp[-1].mV_Var_Arr_Dec_Info_Vector));
+                (yyval.mV_NodeVector)->push_back(temp);
+            }
+#line 1900 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 294 "smallc.y" /* yacc.c:1646  */
+#line 266 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
- 								Node* temp = new Node((yylsp[-2]).first_line, Declaration);
- 								temp->initial_Declaration_Local_Struct((yyvsp[-2].mV_StringVector), (yyvsp[-1].mV_StringVector));
- 								(yyval.mV_NodeVector)->push_back(temp);
- 								}
-#line 1940 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
+                Node* temp = new Node((yylsp[-2]).first_line, Declaration);
+                temp->initial_Declaration_Local_Struct((yyvsp[-2].mV_StringVector), (yyvsp[-1].mV_StringVector));
+                (yyval.mV_NodeVector)->push_back(temp);
+            }
+#line 1911 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 300 "smallc.y" /* yacc.c:1646  */
+#line 272 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_NodeVector) = new vector<Node*>();
-								}
-#line 1948 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+            }
+#line 1919 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 305 "smallc.y" /* yacc.c:1646  */
+#line 276 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = (yyvsp[-3].mV_StringVector);
-								for(int i=0; i<(yyvsp[-1].mV_StringVector)->size(); ++i){
-									(yyvsp[-3].mV_StringVector)->push_back((*(yyvsp[-1].mV_StringVector))[i]);
-								}
-								delete (yyvsp[-1].mV_StringVector);
-								}
-#line 1960 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-3].mV_StringVector);
+                for(int i=0; i<(yyvsp[-1].mV_StringVector)->size(); ++i) {
+                    (yyvsp[-3].mV_StringVector)->push_back((*(yyvsp[-1].mV_StringVector))[i]);
+                }
+                delete (yyvsp[-1].mV_StringVector);
+            }
+#line 1931 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 312 "smallc.y" /* yacc.c:1646  */
+#line 283 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = new vector<string>();
-								}
-#line 1968 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+            }
+#line 1939 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 317 "smallc.y" /* yacc.c:1646  */
+#line 287 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_StringVector) = (yyvsp[-2].mV_StringVector);
-								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
-								delete (yyvsp[0].mS_Id);
-								}
-#line 1978 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = (yyvsp[-2].mV_StringVector);
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1949 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 322 "smallc.y" /* yacc.c:1646  */
+#line 292 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_StringVector) = new vector<string>();
- 								(yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
- 								delete (yyvsp[0].mS_Id);
- 								}
-#line 1988 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_StringVector) = new vector<string>();
+                (yyval.mV_StringVector)->push_back(*(yyvsp[0].mS_Id));
+                delete (yyvsp[0].mS_Id);
+            }
+#line 1959 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 329 "smallc.y" /* yacc.c:1646  */
+#line 298 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
-								(yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
-								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
-								}
-#line 1998 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
+                (yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
+            }
+#line 1969 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 334 "smallc.y" /* yacc.c:1646  */
+#line 303 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-2].mV_Var_Arr_Dec_Info_Vector);
- 								(yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
- 								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
-								}
-#line 2008 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-2].mV_Var_Arr_Dec_Info_Vector);
+                (yyvsp[0].mV_Var_Arr_Dec_Info)->mv_InitList = new vector<Node*>();
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[0].mV_Var_Arr_Dec_Info));
+            }
+#line 1979 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 339 "smallc.y" /* yacc.c:1646  */
+#line 308 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
-								(yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
-								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
-								}
-#line 2018 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = new vector<Variable_ArrayDeclarationInfo*>();
+                (yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
+            }
+#line 1989 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 344 "smallc.y" /* yacc.c:1646  */
+#line 313 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-4].mV_Var_Arr_Dec_Info_Vector);
- 								(yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
- 								(yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
-								}
-#line 2028 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info_Vector) = (yyvsp[-4].mV_Var_Arr_Dec_Info_Vector);
+                (yyvsp[-2].mV_Var_Arr_Dec_Info)->mv_InitList = (yyvsp[0].mV_NodeVector);
+                (yyval.mV_Var_Arr_Dec_Info_Vector)->push_back((yyvsp[-2].mV_Var_Arr_Dec_Info));
+            }
+#line 1999 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 351 "smallc.y" /* yacc.c:1646  */
+#line 319 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_Var_Arr_Dec_Info) = new Variable_ArrayDeclarationInfo();
-								(yyval.mV_Var_Arr_Dec_Info)->ms_Name = *(yyvsp[0].mS_Id); delete (yyvsp[0].mS_Id);
-								}
-#line 2037 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info) = new Variable_ArrayDeclarationInfo();
+                (yyval.mV_Var_Arr_Dec_Info)->ms_Name = *(yyvsp[0].mS_Id); delete (yyvsp[0].mS_Id);
+            }
+#line 2008 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 355 "smallc.y" /* yacc.c:1646  */
+#line 323 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_Var_Arr_Dec_Info) = (yyvsp[-3].mV_Var_Arr_Dec_Info);
- 								(yyval.mV_Var_Arr_Dec_Info)->mv_ArrayDeclarationSubscriptList.push_back((yyvsp[-1].mI_Int));
- 								}
-#line 2046 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_Var_Arr_Dec_Info) = (yyvsp[-3].mV_Var_Arr_Dec_Info);
+                (yyval.mV_Var_Arr_Dec_Info)->mv_ArrayDeclarationSubscriptList.push_back((yyvsp[-1].mI_Int));
+            }
+#line 2017 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 361 "smallc.y" /* yacc.c:1646  */
+#line 328 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = new vector<Node*>();
-								(yyval.mV_NodeVector)->push_back((yyvsp[0].node));
-								}
-#line 2055 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+                (yyval.mV_NodeVector)->push_back((yyvsp[0].node));
+            }
+#line 2026 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 365 "smallc.y" /* yacc.c:1646  */
+#line 332 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
- 								}
-#line 2063 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-1].mV_NodeVector);
+            }
+#line 2034 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 370 "smallc.y" /* yacc.c:1646  */
-    { (yyval.node) = (yyvsp[0].node);}
-#line 2069 "smallc.tab.c" /* yacc.c:1646  */
+#line 336 "smallc.y" /* yacc.c:1646  */
+    { 
+                (yyval.node) = (yyvsp[0].node);
+            }
+#line 2042 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 371 "smallc.y" /* yacc.c:1646  */
-    { (yyval.node) = NULL;}
-#line 2075 "smallc.tab.c" /* yacc.c:1646  */
+#line 339 "smallc.y" /* yacc.c:1646  */
+    { 
+                (yyval.node) = NULL;
+            }
+#line 2050 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 374 "smallc.y" /* yacc.c:1646  */
+#line 343 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MUL, (yyvsp[0].node));
- 								}
-#line 2084 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MUL, (yyvsp[0].node));
+            }
+#line 2059 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 378 "smallc.y" /* yacc.c:1646  */
+#line 347 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_DIV, (yyvsp[0].node));
- 								}
-#line 2093 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_DIV, (yyvsp[0].node));
+            }
+#line 2068 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 382 "smallc.y" /* yacc.c:1646  */
+#line 351 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MOD, (yyvsp[0].node));
- 								}
-#line 2102 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MOD, (yyvsp[0].node));
+            }
+#line 2077 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 386 "smallc.y" /* yacc.c:1646  */
+#line 355 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_PLUS, (yyvsp[0].node));
- 								}
-#line 2111 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_PLUS, (yyvsp[0].node));
+            }
+#line 2086 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 390 "smallc.y" /* yacc.c:1646  */
+#line 359 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MINUS, (yyvsp[0].node));
- 								}
-#line 2120 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MINUS, (yyvsp[0].node));
+            }
+#line 2095 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 394 "smallc.y" /* yacc.c:1646  */
+#line 363 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHL, (yyvsp[0].node));
- 								}
-#line 2129 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHL, (yyvsp[0].node));
+            }
+#line 2104 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 398 "smallc.y" /* yacc.c:1646  */
+#line 367 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHR, (yyvsp[0].node));
- 								}
-#line 2138 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHR, (yyvsp[0].node));
+            }
+#line 2113 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 402 "smallc.y" /* yacc.c:1646  */
+#line 371 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_GT, (yyvsp[0].node));
- 								}
-#line 2147 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_GT, (yyvsp[0].node));
+            }
+#line 2122 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 406 "smallc.y" /* yacc.c:1646  */
+#line 375 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_GE, (yyvsp[0].node));
- 								}
-#line 2156 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_GE, (yyvsp[0].node));
+            }
+#line 2131 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 410 "smallc.y" /* yacc.c:1646  */
+#line 379 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LT, (yyvsp[0].node));
- 								}
-#line 2165 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LT, (yyvsp[0].node));
+            }
+#line 2140 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 414 "smallc.y" /* yacc.c:1646  */
+#line 383 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LE, (yyvsp[0].node));
- 								}
-#line 2174 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LE, (yyvsp[0].node));
+            }
+#line 2149 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 418 "smallc.y" /* yacc.c:1646  */
+#line 387 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_ET, (yyvsp[0].node));
- 								}
-#line 2183 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_ET, (yyvsp[0].node));
+            }
+#line 2158 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 422 "smallc.y" /* yacc.c:1646  */
+#line 391 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_NET, (yyvsp[0].node));
- 								}
-#line 2192 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_NET, (yyvsp[0].node));
+            }
+#line 2167 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 426 "smallc.y" /* yacc.c:1646  */
+#line 395 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITAND, (yyvsp[0].node));
- 								}
-#line 2201 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITAND, (yyvsp[0].node));
+            }
+#line 2176 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 430 "smallc.y" /* yacc.c:1646  */
+#line 399 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITXOR, (yyvsp[0].node));
- 								}
-#line 2210 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITXOR, (yyvsp[0].node));
+            }
+#line 2185 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 434 "smallc.y" /* yacc.c:1646  */
+#line 403 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITOR, (yyvsp[0].node));
- 								}
-#line 2219 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITOR, (yyvsp[0].node));
+            }
+#line 2194 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 438 "smallc.y" /* yacc.c:1646  */
+#line 407 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LOGICALAND, (yyvsp[0].node));
- 								}
-#line 2228 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LOGICALAND, (yyvsp[0].node));
+            }
+#line 2203 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 442 "smallc.y" /* yacc.c:1646  */
+#line 411 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
-								(yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LOGICALOR, (yyvsp[0].node));
- 								}
-#line 2237 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_BinaryOp((yyvsp[-2].node), OP_LOGICALOR, (yyvsp[0].node));
+            }
+#line 2212 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 446 "smallc.y" /* yacc.c:1646  */
+#line 415 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), (yyvsp[0].node));
- 								}
-#line 2246 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), (yyvsp[0].node));
+            }
+#line 2221 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 450 "smallc.y" /* yacc.c:1646  */
+#line 419 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_PLUS, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2257 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_PLUS, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2232 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 456 "smallc.y" /* yacc.c:1646  */
+#line 425 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MINUS, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2268 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MINUS, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2243 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 462 "smallc.y" /* yacc.c:1646  */
+#line 431 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MUL, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp); 	
- 								}
-#line 2279 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_MUL, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);     
+            }
+#line 2254 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 468 "smallc.y" /* yacc.c:1646  */
+#line 437 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_DIV, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2290 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_DIV, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2265 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 474 "smallc.y" /* yacc.c:1646  */
+#line 443 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITAND, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2301 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITAND, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2276 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 480 "smallc.y" /* yacc.c:1646  */
+#line 449 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITXOR, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2312 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITXOR, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2287 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 486 "smallc.y" /* yacc.c:1646  */
+#line 455 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITOR, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2323 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_BITOR, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2298 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 492 "smallc.y" /* yacc.c:1646  */
+#line 461 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHL, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2334 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHL, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2309 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 498 "smallc.y" /* yacc.c:1646  */
+#line 467 "smallc.y" /* yacc.c:1646  */
     {
- 								Node* temp = new Node((yyloc).first_line, Expression);
- 								temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHR, (yyvsp[0].node));
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
- 								}
-#line 2345 "smallc.tab.c" /* yacc.c:1646  */
+                Node* temp = new Node((yyloc).first_line, Expression);
+                temp->initial_Expression_BinaryOp((yyvsp[-2].node), OP_SHR, (yyvsp[0].node));
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Assign((yyvsp[-2].node), temp);
+            }
+#line 2320 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 504 "smallc.y" /* yacc.c:1646  */
+#line 473 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_UnaryOp(OP_MINUS, (yyvsp[0].node));
- 								}
-#line 2354 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_UnaryOp(OP_MINUS, (yyvsp[0].node));
+            }
+#line 2329 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 508 "smallc.y" /* yacc.c:1646  */
+#line 477 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_UnaryOp(OP_LOGICALNOT, (yyvsp[0].node));
- 								}
-#line 2363 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_UnaryOp(OP_LOGICALNOT, (yyvsp[0].node));
+            }
+#line 2338 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 512 "smallc.y" /* yacc.c:1646  */
+#line 481 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_UnaryOp(OP_BITNOT, (yyvsp[0].node));
- 								}
-#line 2372 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_UnaryOp(OP_BITNOT, (yyvsp[0].node));
+            }
+#line 2347 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 516 "smallc.y" /* yacc.c:1646  */
+#line 485 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_UnaryAssign(OP_PREINC, (yyvsp[0].node));
- 								}
-#line 2381 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_UnaryAssign(OP_PREINC, (yyvsp[0].node));
+            }
+#line 2356 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 520 "smallc.y" /* yacc.c:1646  */
+#line 489 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_UnaryAssign(OP_PREDEC, (yyvsp[0].node));
- 								}
-#line 2390 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_UnaryAssign(OP_PREDEC, (yyvsp[0].node));
+            }
+#line 2365 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 524 "smallc.y" /* yacc.c:1646  */
+#line 493 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = (yyvsp[-1].node);
- 								}
-#line 2398 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = (yyvsp[-1].node);
+            }
+#line 2373 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 527 "smallc.y" /* yacc.c:1646  */
+#line 496 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_FunctionCall((yyvsp[-3].mS_Id), (yyvsp[-1].mV_NodeVector));
- 								}
-#line 2407 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_FunctionCall((yyvsp[-3].mS_Id), (yyvsp[-1].mV_NodeVector));
+            }
+#line 2382 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 531 "smallc.y" /* yacc.c:1646  */
+#line 500 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Variable_Array((yyvsp[-1].mS_Id), (yyvsp[0].mV_NodeVector));
- 								}
-#line 2416 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Variable_Array((yyvsp[-1].mS_Id), (yyvsp[0].mV_NodeVector));
+            }
+#line 2391 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 535 "smallc.y" /* yacc.c:1646  */
+#line 504 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_StructMember((yyvsp[-2].mS_Id), (yyvsp[0].mS_Id));
- 								}
-#line 2425 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_StructMember((yyvsp[-2].mS_Id), (yyvsp[0].mS_Id));
+            }
+#line 2400 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 539 "smallc.y" /* yacc.c:1646  */
+#line 508 "smallc.y" /* yacc.c:1646  */
     { 
- 								(yyval.node) = new Node((yyloc).first_line, Expression);
- 								(yyval.node)->initial_Expression_Int((yyvsp[0].mI_Int));
- 								// cout << "Line: " << $$->mi_LineNum << " EXPS -> INT " << $$->mi_IntExpression_Val << endl;
- 								}
-#line 2435 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.node) = new Node((yyloc).first_line, Expression);
+                (yyval.node)->initial_Expression_Int((yyvsp[0].mI_Int));
+            }
+#line 2409 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 546 "smallc.y" /* yacc.c:1646  */
+#line 513 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
-								(yyval.mV_NodeVector)->push_back((yyvsp[-1].node));
-								}
-#line 2444 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-3].mV_NodeVector);
+                (yyval.mV_NodeVector)->push_back((yyvsp[-1].node));
+            }
+#line 2418 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 550 "smallc.y" /* yacc.c:1646  */
+#line 517 "smallc.y" /* yacc.c:1646  */
     { 
-								(yyval.mV_NodeVector) = new vector<Node*>();
-								}
-#line 2452 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+            }
+#line 2426 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 555 "smallc.y" /* yacc.c:1646  */
+#line 521 "smallc.y" /* yacc.c:1646  */
     {
-								(yyval.mV_NodeVector) = (yyvsp[-2].mV_NodeVector);
-								(yyvsp[-2].mV_NodeVector)->push_back((yyvsp[0].node));
-								}
-#line 2461 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = (yyvsp[-2].mV_NodeVector);
+                (yyvsp[-2].mV_NodeVector)->push_back((yyvsp[0].node));
+            }
+#line 2435 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 559 "smallc.y" /* yacc.c:1646  */
+#line 525 "smallc.y" /* yacc.c:1646  */
     {
- 								(yyval.mV_NodeVector) = new vector<Node*>();
- 								if((yyvsp[0].node)!=NULL)(yyval.mV_NodeVector)->push_back((yyvsp[0].node));
- 								}
-#line 2470 "smallc.tab.c" /* yacc.c:1646  */
+                (yyval.mV_NodeVector) = new vector<Node*>();
+                if((yyvsp[0].node)!=NULL)(yyval.mV_NodeVector)->push_back((yyvsp[0].node));
+            }
+#line 2444 "smallc.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2474 "smallc.tab.c" /* yacc.c:1646  */
+#line 2448 "smallc.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2705,67 +2679,52 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 564 "smallc.y" /* yacc.c:1906  */
+#line 530 "smallc.y" /* yacc.c:1906  */
 
-
-// function to print the error message
 void yyerror(const char *s)
 {
-	fprintf(stderr, "[line %d]: %s %s\n", yylloc.first_line, s, yytext);
+    fprintf(stderr, "[line %d]: %s %s\n", yylloc.first_line, s, yytext);
 }
 
+// core function of the complier
 int main(int argc, char **argv)
 {
-	int i;
-	if(argc<2){ // input the to-be-parsed program via terminal, not recommanded.
-		linecount = 1;
-		yyparse();
-		cout << "Parsing complete" << endl;
-		return 0;
-	}
-	program_out = NULL;
-	for(i=1; i<argc; ++i){ // input the to-be-parsed program via files
-		FILE *f = fopen(argv[i], "r");
-		if(!f){
-			perror(argv[i]);
-			continue;
-		}
-		printf("\n");
-		linecount = 1;
-		extern FILE* yyin;
-		yyin = f;
-		yyparse();
-		cout << "FILE: " << argv[i] << " Parsing complete\n";
-		fclose(f);	
-	}
-	if(program_out==NULL){
-		cout << "Please check the syntax error before generating codes!" << endl;
-		return 0;
-	}
-	inters = new vector<Inter*>();
-	instrs = new vector<Instruction*>(); 
-	if(!generate_intermediates(symbol_table, inters, program_out, instrs)){
-		cout << "Semantic Error Exists" << endl;
-		return 0;
-	}
-	else {
-		cout << "Semantic Check Pass" << endl;
-	}
+    if (argc != 3) {
+        printf("\033[1mInput Error!\033[0m\n");
+        printf("You should assign the input file and output file.\n");
+        return -1;
+    }
+    extern FILE* yyin;
+    yyin = fopen(argv[1] ,"r");
+    
+    // syntax analysis
+    if (yyparse() != 0) {
+        printf("\033[1mParsing Error!\033[0m\n");
+        return -1;
+    }
+    
+    // semantic analysis
+    inters = new vector<Inter*>();
+    instrs = new vector<Instruction*>(); 
+    if (!generate_intermediates(symbol_table, inters, root, instrs)) {
+        cout << "\033[1mSemantic Error!\033[0m" << endl;
+        return 0;
+    }
 
-	// Intermediate Code Print
-	ofstream fout("InterCode");
-	for(auto it = inters->begin(); it != inters->end(); ++it){
-		fout << **it;
-		delete (*it);
-	}
+    // intermediate code generate
+    ofstream fout("InterCode");
+    for(auto it = inters->begin(); it != inters->end(); ++it) {
+        fout << **it;
+        delete (*it);
+    }
 
-	// MIPS32 Code Print
-	ofstream ffout("MIPSCode.s");
-	for(auto it = instrs->begin(); it != instrs->end(); ++it){
-		ffout << **it;
-		delete(*it);
-	}
+    // mips code generate
+    ofstream ffout(argv[2]);
+    for(auto it = instrs->begin(); it != instrs->end(); ++it) {
+        ffout << **it;
+        delete(*it);
+    }
 
-	return 0;
+    return 0;
 }
 

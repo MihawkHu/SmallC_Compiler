@@ -40,15 +40,14 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "smallc.y" /* yacc.c:1909  */
+#line 19 "smallc.y" /* yacc.c:1909  */
 
-#include "node.h"
-#include "inter.h"
-#include "intermediate.h"
-#include "mips.h"
+    #include "node.h"
+    #include "inter.h"
+    #include "intermediate.h"
+    #include "mips.h"
 
-
-#line 52 "smallc.tab.h" /* yacc.c:1909  */
+#line 51 "smallc.tab.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -117,17 +116,17 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 71 "smallc.y" /* yacc.c:1909  */
+#line 56 "smallc.y" /* yacc.c:1909  */
 
-	int mI_Int;
-	std::string* mS_Id;
-	std::vector<Node*>* mV_NodeVector;
-	Node* node;
-	struct Variable_ArrayDeclarationInfo* mV_Var_Arr_Dec_Info;
-	std::vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector;
-	std::vector<std::string>* mV_StringVector;
+    int mI_Int;
+    std::string* mS_Id;
+    std::vector<Node*>* mV_NodeVector;
+    Node* node;
+    struct Variable_ArrayDeclarationInfo* mV_Var_Arr_Dec_Info;
+    std::vector<Variable_ArrayDeclarationInfo*>* mV_Var_Arr_Dec_Info_Vector;
+    std::vector<std::string>* mV_StringVector;
 
-#line 131 "smallc.tab.h" /* yacc.c:1909  */
+#line 130 "smallc.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -174,27 +174,8 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex. 
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
-            }while(0)
+    #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -544,14 +525,6 @@ static yyconst flex_int16_t yy_chk[193] =
 
     } ;
 
-/* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[65] =
-    {   0,
-0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 1, 0, 0, 0,     };
-
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -567,9 +540,6 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "smallc.l"
-#line 2 "smallc.l"
-
-////////////////////////////////////////////////////////////////////////
 /*
   File Name: smallc.l
   Destination OutputFile: lex.yy.c
@@ -579,24 +549,22 @@ char *yytext;
   More often, it is used together with smallc.y to build a syntax 
   analyzer and return the tokens to the syntax analyzer.
 */
-////////////////////////////////////////////////////////////////////////
+#line 11 "smallc.l"
+    #include "smallc.tab.h"
+    #include <cstdio>
+    #include <cstdlib>
 
-/*#include "main.hpp"*/
-#include "smallc.tab.h"
-#include <stdio.h>
-#include <stdlib.h>
+    extern "C" {
+        int yylex(void);
+    }
 
-extern "C"
-{
-	// int yywrap(void);
-	int yylex(void);
-}
+    void updatePosition();
+    #define YY_USER_ACTION updatePosition();
+    int linecount = 1;
 
-void updatePosition();
-#define YY_USER_ACTION updatePosition();
-int linecount = 1; // line count
-
-#line 600 "lex.yy.c"
+/*%option yylineno*/
+/*%option nounput*/
+#line 568 "lex.yy.c"
 
 #define INITIAL 0
 #define comment 1
@@ -656,6 +624,8 @@ extern int yywrap (void );
 #endif
 #endif
 
+    static void yyunput (int c,char *buf_ptr  );
+    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int );
 #endif
@@ -809,10 +779,9 @@ YY_DECL
 		}
 
 	{
-#line 37 "smallc.l"
+#line 30 "smallc.l"
 
-
-#line 816 "lex.yy.c"
+#line 785 "lex.yy.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -858,16 +827,6 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
-			{
-			yy_size_t yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
-				if ( yytext[yyl] == '\n' )
-					   
-    yylineno++;
-;
-			}
-
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -881,329 +840,329 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 39 "smallc.l"
+#line 31 "smallc.l"
 BEGIN(comment);
 	YY_BREAK
 
 case 2:
 YY_RULE_SETUP
-#line 41 "smallc.l"
-/* eat anything that's not a '*' */
+#line 33 "smallc.l"
+
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 42 "smallc.l"
-/* eat up '*'s not followed by '/'s */
+#line 34 "smallc.l"
+
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 43 "smallc.l"
+#line 35 "smallc.l"
 
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 44 "smallc.l"
+#line 36 "smallc.l"
 BEGIN(INITIAL);
 	YY_BREAK
 
 case 6:
 YY_RULE_SETUP
-#line 48 "smallc.l"
-{ yylval.mI_Int = strtoul(yytext, NULL, 0); /*printf("INT ");*/ return INT;}
+#line 39 "smallc.l"
+{ yylval.mI_Int = strtoul(yytext, NULL, 0); return INT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 49 "smallc.l"
-{ /*yylval = atoi(yytext);*/ /*printf("INT ");*/ yylval.mI_Int =  atoi(yytext); return INT;}
+#line 40 "smallc.l"
+{ yylval.mI_Int =  atoi(yytext); return INT;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 50 "smallc.l"
-{ yylval.mI_Int = strtoul(yytext, NULL, 0); /*printf("INT ");*/ return INT;}
+#line 41 "smallc.l"
+{ yylval.mI_Int = strtoul(yytext, NULL, 0); return INT;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 51 "smallc.l"
-{ /*printf("SEMI ");*/ return SEMI;}
+#line 43 "smallc.l"
+{ return SEMI;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 52 "smallc.l"
-{ /*printf("COMMA ");*/ return COMMA;}
+#line 44 "smallc.l"
+{ return COMMA;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 53 "smallc.l"
-{ /*printf("DOT ");*/ return DOT;}
+#line 45 "smallc.l"
+{ return DOT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 54 "smallc.l"
-{ /*printf("MINUS ");*/ return MINUS;}
+#line 46 "smallc.l"
+{ return MINUS;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "smallc.l"
-{ /*printf("LOGICALNOT ");*/ return LOGICALNOT;}
+#line 47 "smallc.l"
+{ return LOGICALNOT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 56 "smallc.l"
-{ /*printf("PREINC ");*/ return PREINC;}
+#line 48 "smallc.l"
+{ return PREINC;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 57 "smallc.l"
-{ /*printf("PREDEC ");*/ return PREDEC;}
+#line 49 "smallc.l"
+{ return PREDEC;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 58 "smallc.l"
-{ /*printf("BINARYNOT ");*/ return BITNOT;}
+#line 50 "smallc.l"
+{ return BITNOT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 59 "smallc.l"
-{ /*printf("MUL ");*/ return MUL;}
+#line 51 "smallc.l"
+{ return MUL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 60 "smallc.l"
-{ /*printf("DIV ");*/ return DIV;}
+#line 52 "smallc.l"
+{ return DIV;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 61 "smallc.l"
-{ /*printf("MOD ");*/ return MOD;}
+#line 53 "smallc.l"
+{ return MOD;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 62 "smallc.l"
-{ /*printf("PLUS ");*/ return PLUS;}
+#line 54 "smallc.l"
+{ return PLUS;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 63 "smallc.l"
-{ /*printf("SHL ");*/ return SHL;}
+#line 55 "smallc.l"
+{ return SHL;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 64 "smallc.l"
-{ /*printf("SHR ");*/ return SHR;}
+#line 56 "smallc.l"
+{ return SHR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 65 "smallc.l"
-{ /*printf("GT ");*/ return GT;}
+#line 57 "smallc.l"
+{ return GT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 66 "smallc.l"
-{ /*printf("GE ");*/ return GE;}
+#line 58 "smallc.l"
+{ return GE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 67 "smallc.l"
-{ /*printf("LT ");*/ return LT;}
+#line 59 "smallc.l"
+{ return LT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 68 "smallc.l"
-{ /*printf("LE ");*/ return LE;}
+#line 60 "smallc.l"
+{ return LE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 69 "smallc.l"
-{ /*printf("ET ");*/ return ET;}
+#line 61 "smallc.l"
+{ return ET;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 70 "smallc.l"
-{ /*printf("NET ");*/ return NET;}
+#line 62 "smallc.l"
+{ return NET;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 71 "smallc.l"
-{ /*printf("BITAND ");*/ return BITAND;}
+#line 63 "smallc.l"
+{ return BITAND;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 72 "smallc.l"
-{ /*printf("BITXOR ");*/ return BITXOR;}
+#line 64 "smallc.l"
+{ return BITXOR;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 73 "smallc.l"
-{ /*printf("BITOR ");*/ return BITOR;}
+#line 65 "smallc.l"
+{ return BITOR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 74 "smallc.l"
-{ /*printf("LOGICALAND ");*/ return LOGICALAND;}
+#line 66 "smallc.l"
+{ return LOGICALAND;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 75 "smallc.l"
-{ /*printf("LOGICALOR ");*/ return LOGICALOR;}
+#line 67 "smallc.l"
+{ return LOGICALOR;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 76 "smallc.l"
-{ /*printf("ASSIGN ");*/ return ASSIGN;}
+#line 68 "smallc.l"
+{ return ASSIGN;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 77 "smallc.l"
-{ /*printf("PLUSASSIGN ");*/ return PLUSASSIGN;}
+#line 69 "smallc.l"
+{ return PLUSASSIGN;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 78 "smallc.l"
-{ /*printf("MINUSASSIGN ");*/ return MINUSASSIGN;}
+#line 70 "smallc.l"
+{ return MINUSASSIGN;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 79 "smallc.l"
-{ /*printf("MULASSIGN ");*/ return MULASSIGN;}
+#line 71 "smallc.l"
+{ return MULASSIGN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 80 "smallc.l"
-{ /*printf("DIVASSIGN ");*/ return DIVASSIGN;}
+#line 72 "smallc.l"
+{ return DIVASSIGN;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 81 "smallc.l"
-{ /*printf("ANDASSIGN ");*/ return ANDASSIGN;}
+#line 73 "smallc.l"
+{ return ANDASSIGN;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 82 "smallc.l"
-{ /*printf("XORASSIGN ");*/ return XORASSIGN;}
+#line 74 "smallc.l"
+{ return XORASSIGN;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 83 "smallc.l"
-{ /*printf("ORASSIGN ");*/ return ORASSIGN;}
+#line 75 "smallc.l"
+{ return ORASSIGN;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 84 "smallc.l"
-{ /*printf("SHLASSIGN ");*/ return SHLASSIGN;}
+#line 76 "smallc.l"
+{ return SHLASSIGN;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 85 "smallc.l"
-{ /*printf("SHRASSIGN ");*/ return SHRASSIGN;}
+#line 77 "smallc.l"
+{ return SHRASSIGN;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 86 "smallc.l"
-{ /*printf("TYPE ");*/ return TYPE;}
+#line 79 "smallc.l"
+{ return TYPE;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 87 "smallc.l"
-{ /*printf("LP ");*/ return LP;}
+#line 80 "smallc.l"
+{ return LP;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 88 "smallc.l"
-{ /*printf("RP ");*/ return RP;}
+#line 81 "smallc.l"
+{ return RP;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 89 "smallc.l"
-{ /*printf("LB ");*/ return LB;}
+#line 82 "smallc.l"
+{ return LB;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 90 "smallc.l"
-{ /*printf("RB ");*/ return RB;}
+#line 83 "smallc.l"
+{ return RB;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 91 "smallc.l"
-{ /*printf("LC ");*/ return LC;}
+#line 84 "smallc.l"
+{ return LC;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 92 "smallc.l"
-{ /*printf("RC ");*/ return RC;}
+#line 85 "smallc.l"
+{ return RC;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 93 "smallc.l"
-{ /*printf("STRUCT ");*/ return STRUCT;}
+#line 87 "smallc.l"
+{ return STRUCT;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 94 "smallc.l"
-{ /*printf("RETURN ");*/ return RETURN;}
+#line 88 "smallc.l"
+{ return RETURN;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 95 "smallc.l"
+#line 89 "smallc.l"
 {return READ;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 96 "smallc.l"
+#line 90 "smallc.l"
 {return WRITE;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 97 "smallc.l"
-{ /*printf("IF ");*/ return IF;}
+#line 91 "smallc.l"
+{ return IF;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 98 "smallc.l"
-{ /*printf("ELSE ");*/ return ELSE;}
+#line 92 "smallc.l"
+{ return ELSE;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 99 "smallc.l"
-{ /*printf("BREAK ");*/ return BREAK;}
+#line 93 "smallc.l"
+{ return BREAK;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 100 "smallc.l"
-{ /*printf("CONT ");*/ return CONT;}
+#line 94 "smallc.l"
+{ return CONT;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 101 "smallc.l"
-{ /*printf("FOR ");*/ return FOR;}
+#line 95 "smallc.l"
+{ return FOR;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 102 "smallc.l"
-{ /*printf("ID ");*/ yylval.mS_Id = new std::string(yytext); return ID;}
+#line 97 "smallc.l"
+{ yylval.mS_Id = new std::string(yytext); return ID;}
 	YY_BREAK
 case 61:
 /* rule 61 can match eol */
 YY_RULE_SETUP
-#line 103 "smallc.l"
-{ ++linecount; /*printf("\n%d: ",linecount);*/}
+#line 98 "smallc.l"
+{ ++linecount;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 104 "smallc.l"
+#line 99 "smallc.l"
 
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 105 "smallc.l"
-{ /* comment */ }
+#line 100 "smallc.l"
+{ }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 106 "smallc.l"
+#line 101 "smallc.l"
 ECHO;
 	YY_BREAK
-#line 1207 "lex.yy.c"
+#line 1166 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(comment):
 	yyterminate();
@@ -1534,6 +1493,43 @@ static int yy_get_next_buffer (void)
 		return yy_is_jam ? 0 : yy_current_state;
 }
 
+    static void yyunput (int c, register char * yy_bp )
+{
+	register char *yy_cp;
+    
+    yy_cp = (yy_c_buf_p);
+
+	/* undo effects of setting up yytext */
+	*yy_cp = (yy_hold_char);
+
+	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
+		{ /* need to shift things up to make room */
+		/* +2 for EOB chars. */
+		register yy_size_t number_to_move = (yy_n_chars) + 2;
+		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
+					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
+		register char *source =
+				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
+
+		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
+			*--dest = *--source;
+
+		yy_cp += (int) (dest - source);
+		yy_bp += (int) (dest - source);
+		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
+			(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
+
+		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
+			YY_FATAL_ERROR( "flex scanner push-back overflow" );
+		}
+
+	*--yy_cp = (char) c;
+
+	(yytext_ptr) = yy_bp;
+	(yy_hold_char) = *yy_cp;
+	(yy_c_buf_p) = yy_cp;
+}
+
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
     static int yyinput (void)
@@ -1603,11 +1599,6 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
-
-	if ( c == '\n' )
-		   
-    yylineno++;
-;
 
 	return c;
 }
@@ -2075,9 +2066,6 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    /* We do not touch yylineno unless the option is enabled. */
-    yylineno =  1;
-    
     (yy_buffer_stack) = 0;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2170,13 +2158,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 105 "smallc.l"
-
-
+#line 100 "smallc.l"
 
 
 
 void updatePosition(){
-	yylloc.first_line = linecount;
+    yylloc.first_line = linecount;
 }
 
